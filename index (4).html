@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PRUVN & Associates — ADP Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f7;min-height:100vh}
+:root{
+  --navy:#1a2744;--navy2:#243059;--navy3:#2e3d6e;
+  --gold:#e8970a;--gold2:#f0a500;
+  --border:#dde2ec;--border2:#c8d0e4;
+  --text:#1e2532;--muted:#6b7a99;--muted2:#9aa3bb;
+  --green:#1a8c5a;--green-bg:#e8f8f0;
+  --red:#c0392b;--red-bg:#fdf0ee;
+  --amber:#c47f00;--amber-bg:#fdf4e0;
+}
+*::-webkit-scrollbar{width:5px;height:5px}
+*::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* Setup CSS removed — not needed */
+
+/* ── LOGIN ── */
+.login-page{display:none;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(145deg,#0f1a38,#1a2744 50%,#243059)}
+.login-page.visible{display:flex}
+.login-box{background:#fff;border-radius:20px;padding:3rem 2.5rem 2.5rem;width:380px;max-width:96vw;box-shadow:0 24px 80px rgba(0,0,0,.35)}
+.login-emblem{text-align:center;margin-bottom:2rem}
+.login-emblem .circle{width:64px;height:64px;border-radius:50%;background:var(--navy);display:inline-flex;align-items:center;justify-content:center;margin-bottom:.8rem}
+.login-emblem .circle span{color:#fff;font-size:22px;font-weight:800}
+.login-emblem h1{font-size:20px;font-weight:800;color:var(--navy)}
+.login-emblem p{font-size:12px;color:var(--muted);margin-top:3px}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.form-group select,.form-group input[type=password]{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);outline:none;transition:.2s;background:#fff}
+.form-group select:focus,.form-group input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,39,68,.08)}
+.remember-row{display:flex;align-items:center;gap:8px;margin-bottom:1rem}
+.remember-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--navy);cursor:pointer}
+.remember-row label{font-size:12px;color:var(--muted);cursor:pointer;user-select:none}
+.btn-login{width:100%;background:var(--navy);color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.btn-login:hover{background:var(--navy2)}
+.err-msg{background:var(--red-bg);color:var(--red);font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:10px;display:none;border-left:3px solid var(--red)}
+
+/* ── APP SHELL ── */
+.app-page{display:none;min-height:100vh;flex-direction:column}
+.app-page.visible{display:flex}
+.topbar{background:var(--navy);color:#fff;padding:0 1.8rem;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-brand{font-size:17px;font-weight:800}
+.topbar-brand span{color:var(--gold2)}
+.pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(240,165,0,.2);color:var(--gold2);border:1px solid rgba(240,165,0,.3);letter-spacing:.5px;margin-left:8px}
+.pill.admin{background:rgba(240,165,0,.35);color:#ffc84a}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.topbar-user{font-size:13px;opacity:.85}
+.sync-badge{font-size:11px;color:#7ecfaa;font-weight:600}
+.sync-badge.err{color:#f87171}
+.btn-logout{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-logout:hover{background:rgba(255,255,255,.1);color:#fff}
+.date-banner{background:linear-gradient(90deg,var(--navy2),var(--navy3));color:#fff;padding:8px 1.8rem;font-size:12px;display:flex;gap:20px;flex-wrap:wrap}
+.date-banner b{color:var(--gold2)}
+.nav-tabs{background:#fff;border-bottom:2px solid var(--border);padding:0 1.8rem;display:flex;overflow-x:auto}
+.nav-tab{padding:13px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--navy)}
+.nav-tab.active{color:var(--navy);border-bottom-color:var(--gold2)}
+.page-body{flex:1;padding:1.6rem 1.8rem;overflow-y:auto}
+
+/* ── META CARD ── */
+.adp-meta-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.1rem 1.5rem;margin-bottom:1.2rem}
+.adp-meta-title{text-align:center;font-size:15px;font-weight:800;color:var(--navy);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:.7rem}
+.adp-meta-title span{color:var(--gold)}
+.adp-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.adp-meta-item label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:2px}
+.adp-meta-item b{font-size:13px;color:var(--navy);font-weight:700}
+
+/* ── TASK CARDS ── */
+.task-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1rem 1.2rem;margin-bottom:.7rem;transition:.15s}
+.task-card:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(26,39,68,.07)}
+.task-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}
+.task-row-label{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px}
+.btn-remove{background:var(--red-bg);color:var(--red);border:1px solid #f5c6c1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.form-grid{display:grid;gap:8px;margin-bottom:6px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1.8fr 1fr 2fr}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.field-wrap label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
+.field-wrap input,.field-wrap select{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;transition:.15s;background:#fff;font-family:inherit}
+.field-wrap input:focus,.field-wrap select:focus{border-color:var(--navy)}
+.field-wrap input.auto-filled{background:#f0f7ff;border-color:#b8d4f5}
+.process-wrap{display:flex;gap:6px}
+.process-wrap select{flex:1.2}
+.process-wrap input{flex:1.5}
+.btn-add-row{background:#f0f4ff;color:var(--navy);border:1.5px dashed var(--border2);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-bottom:1rem}
+.btn-add-row:hover{background:#e4eaff}
+.action-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn-save{background:var(--navy);color:#fff;border:none;padding:11px 28px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer}
+.btn-save:hover{background:var(--navy2)}
+.btn-save.gold{background:var(--gold)}
+.btn-save.gold:hover{background:#d48800}
+.btn-save.sm{padding:8px 16px;font-size:12px}
+.save-ts{font-size:11.5px;color:var(--green);font-weight:600}
+
+/* ── REPORTS ── */
+.reports-filter{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1rem 1.4rem;margin-bottom:1.2rem;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.reports-filter .field-wrap{flex:1;min-width:150px}
+.reports-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.2rem}
+.report-tile{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.3rem}
+.report-tile h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:.3rem}
+.report-tile p{font-size:12px;color:var(--muted);margin-bottom:.9rem;line-height:1.5}
+.btn-dl{display:block;width:100%;background:var(--navy);color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:6px}
+.btn-dl:hover{background:var(--navy2)}
+.btn-dl.gold{background:var(--gold)}
+.btn-dl.gold:hover{background:#d48800}
+
+/* ── PREVIEW TABLE (website) ── */
+.preview-section{background:#fff;border-radius:12px;border:1.5px solid var(--border);overflow:auto;margin-top:.8rem}
+.preview-section table{width:100%;border-collapse:collapse;font-size:12px;min-width:700px}
+.preview-section thead th{background:var(--navy);color:#fff;padding:8px 9px;text-align:left;font-weight:700;white-space:nowrap}
+.preview-section tbody td{padding:7px 9px;border:1px solid var(--border);color:var(--text);vertical-align:top}
+.preview-section tbody tr:nth-child(odd) td{background:#f7f9ff}
+.preview-section .ptitle td{background:var(--navy2)!important;color:#fff!important;font-weight:700!important;text-align:center;font-size:13px!important;padding:10px!important}
+.preview-section .psubhead td{background:#e8ecf8!important;color:var(--navy)!important;font-size:10px!important;font-weight:700!important;text-transform:uppercase;letter-spacing:.4px;padding:5px 9px!important}
+.sr-cell{font-weight:700;color:var(--navy);white-space:nowrap}
+.article-cell{font-weight:700;color:var(--navy2)}
+.sub-row td.sr-cell{color:transparent;border-top:none!important}
+.preview-save-bar{padding:.8rem 1rem;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;background:#f7f9ff;border-radius:0 0 12px 12px}
+
+/* ── TEAM TABLE ── */
+.team-table-wrap{background:#fff;border-radius:12px;border:1.5px solid var(--border);overflow:hidden}
+.team-table-wrap table{width:100%;border-collapse:collapse;font-size:13px}
+.team-table-wrap thead th{background:var(--navy);color:#fff;padding:10px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.team-table-wrap tbody td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.team-table-wrap tbody tr:last-child td{border-bottom:none}
+.team-table-wrap tbody tr:hover td{background:#f7f9ff}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.badge-done{background:var(--green-bg);color:var(--green)}
+.badge-pend{background:var(--amber-bg);color:var(--amber)}
+.badge-empty{background:#f0f2f7;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dot-g{background:var(--green)}.dot-a{background:#e8970a}.dot-e{background:#ccc}
+
+/* ── MEMBERS ── */
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.7rem;margin-bottom:1rem}
+.member-chip{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.member-chip .minfo{flex:1;min-width:0}
+.member-chip .mname{font-size:13px;font-weight:700;color:var(--navy)}
+.member-chip .muname{font-size:11px;color:var(--muted);margin-top:1px}
+.chip-btns{display:flex;gap:6px;flex-shrink:0}
+.chip-edit{background:#edf2ff;color:var(--navy);border:1px solid var(--border2);padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.chip-del{background:var(--red-bg);color:var(--red);border:1px solid #f5c6c1;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.add-member-form{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.2rem;margin-bottom:1rem}
+.add-member-form h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:.8rem}
+.amrow{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:flex-end}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:2rem;width:460px;max-width:96vw;box-shadow:0 12px 48px rgba(0,0,0,.25)}
+.modal h3{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:.8rem}
+.modal p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:.8rem}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1rem}
+.btn-cancel{background:#f0f2f7;color:var(--muted);border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+
+/* ── LOADER ── */
+.loader-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);z-index:2000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.loader-overlay.visible{display:flex}
+.spinner{width:36px;height:36px;border:4px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-overlay p{font-size:13px;color:var(--muted);font-weight:600}
+
+/* ── SECTION HEADER ── */
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-hd h2{font-size:16px;font-weight:800;color:var(--navy)}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;display:none;box-shadow:0 6px 24px rgba(0,0,0,.22)}
+
+@media(max-width:640px){
+  .adp-meta-grid,.g3,.g4{grid-template-columns:1fr 1fr!important}
+  .reports-grid{grid-template-columns:1fr}
+  .page-body{padding:1rem}
+  .topbar{padding:0 1rem}
+  .amrow{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Setup screen removed — credentials hardcoded -->
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-emblem">
+      <div class="circle"><span>PA</span></div>
+      <h1>PRUVN &amp; Associates</h1>
+      <p>Audit Day Plan Portal</p>
+    </div>
+    <div class="err-msg" id="loginErr"></div>
+    <div class="form-group">
+      <label>Select Your Name</label>
+      <select id="loginRole"><option value="">— Select Member —</option></select>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <!-- FIX 1: Remember Me -->
+    <div class="remember-row">
+      <input type="checkbox" id="rememberMe"/>
+      <label for="rememberMe">Remember me on this device</label>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Login to Portal →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app-page" id="appPage">
+  <div class="topbar">
+    <div style="display:flex;align-items:center">
+      <div class="topbar-brand">PRUVN <span>&</span> Associates</div>
+      <div class="pill" id="topPill">STAFF</div>
+    </div>
+    <div class="topbar-right">
+      <span id="syncStatus" class="sync-badge">🟢 Synced</span>
+      <span class="topbar-user" id="topUser"></span>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="date-banner">
+    <span>📅 Today: <b id="bannerDate"></b></span>
+    <span>🕙 Morning ADP at <b>10:00 AM</b></span>
+    <span>🕕 Evening ADP at <b>6:00 PM</b></span>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('opening')" id="ntab-opening">📋 Morning Entry</div>
+    <div class="nav-tab" onclick="showTab('closing')" id="ntab-closing">✅ Evening Entry</div>
+    <div class="nav-tab" onclick="showTab('team')" id="ntab-team">👥 Team Overview</div>
+    <div class="nav-tab" onclick="showTab('reports')" id="ntab-reports">📊 Reports</div>
+    <div class="nav-tab" onclick="showTab('members')" id="ntab-members" style="display:none">⚙️ Members</div>
+  </div>
+  <div class="page-body">
+
+    <!-- MORNING -->
+    <div id="tab-opening" class="tab-pane">
+      <div class="adp-meta-card">
+        <div class="adp-meta-title">Audit Day Plan — <span>Morning Opening (ADP)</span></div>
+        <div class="adp-meta-grid">
+          <div class="adp-meta-item"><label>Date</label><b id="opDate"></b></div>
+          <div class="adp-meta-item"><label>Prepared by</label><b id="opPrepBy"></b></div>
+          <div class="adp-meta-item"><label>Shared via</label><b>WhatsApp at 10 AM</b></div>
+          <div class="adp-meta-item"><label>Reviewed by</label><b>CA Parikshit</b></div>
+        </div>
+      </div>
+      <div id="openingTasks"></div>
+      <button class="btn-add-row" onclick="addTask('opening')">＋ Add Client / Task Row</button>
+      <div class="action-bar">
+        <button class="btn-save" onclick="saveTasks('opening')">☁️ Save &amp; Sync Morning</button>
+        <span class="save-ts" id="opSaveTs"></span>
+      </div>
+    </div>
+
+    <!-- EVENING -->
+    <div id="tab-closing" class="tab-pane" style="display:none">
+      <div class="adp-meta-card">
+        <div class="adp-meta-title">Audit Day Plan — <span>Evening Closing (ADP)</span></div>
+        <div class="adp-meta-grid">
+          <div class="adp-meta-item"><label>Date</label><b id="clDate"></b></div>
+          <div class="adp-meta-item"><label>Prepared by</label><b id="clPrepBy"></b></div>
+          <div class="adp-meta-item"><label>Shared via</label><b>WhatsApp at 6 PM</b></div>
+          <div class="adp-meta-item"><label>Reviewed by</label><b>CA Parikshit</b></div>
+        </div>
+      </div>
+      <!-- FIX 3: Auto-fill banner -->
+      <div id="eveningAutoBanner" style="display:none;background:#e8f4ff;border:1.5px solid #b8d4f5;border-radius:10px;padding:.7rem 1rem;margin-bottom:.8rem;font-size:12.5px;color:#1a4a7a;display:flex;align-items:center;gap:8px">
+        ℹ️ Morning entries auto-filled below. Add actual time/TXN and edit if needed.
+      </div>
+      <div id="closingTasks"></div>
+      <button class="btn-add-row" onclick="addTask('closing')">＋ Add Client / Task Row</button>
+      <div class="action-bar">
+        <button class="btn-save gold" onclick="saveTasks('closing')">☁️ Save &amp; Sync Evening</button>
+        <span class="save-ts" id="clSaveTs"></span>
+      </div>
+    </div>
+
+    <!-- TEAM -->
+    <div id="tab-team" class="tab-pane" style="display:none">
+      <div class="section-hd">
+        <h2>Team Submission Status — <span id="teamDateLabel"></span></h2>
+        <button class="btn-save sm" onclick="renderTeam()">🔄 Refresh</button>
+      </div>
+      <div class="team-table-wrap" id="teamTable"></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="tab-reports" class="tab-pane" style="display:none">
+      <div class="section-hd"><h2>Reports &amp; Export</h2></div>
+
+      <!-- Date info banner -->
+      <div style="background:#e8f4ff;border:1.5px solid #b8d4f5;border-radius:10px;padding:.7rem 1rem;margin-bottom:1rem;font-size:12.5px;color:#1a4a7a;line-height:1.6">
+        📅 <b>To view any past date report</b> — select the date below, choose member &amp; type, then click <b>Load Preview</b>. All submitted data is stored in the cloud permanently.
+      </div>
+
+      <div class="reports-filter">
+        <div class="field-wrap">
+          <label>Report Date</label>
+          <input type="date" id="rptDate"/>
+          <!-- Quick date shortcut buttons -->
+          <div style="display:flex;gap:5px;margin-top:5px;flex-wrap:wrap">
+            <button onclick="setRptDate(0)" style="font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:#f0f4ff;color:var(--navy);cursor:pointer;font-weight:600">Today</button>
+            <button onclick="setRptDate(-1)" style="font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:#f0f4ff;color:var(--navy);cursor:pointer;font-weight:600">Yesterday</button>
+            <button onclick="setRptDate(-2)" style="font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:#f0f4ff;color:var(--navy);cursor:pointer;font-weight:600">2 Days Ago</button>
+            <button onclick="setRptDate(-7)" style="font-size:10px;padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:#f0f4ff;color:var(--navy);cursor:pointer;font-weight:600">Last Week</button>
+          </div>
+        </div>
+        <div class="field-wrap">
+          <label>Team Member</label>
+          <select id="rptMember"><option value="ALL">All Members</option></select>
+        </div>
+        <div class="field-wrap">
+          <label>Report Type</label>
+          <select id="rptType">
+            <option value="opening">Morning (Opening)</option>
+            <option value="closing">Evening (Closing)</option>
+          </select>
+        </div>
+        <button class="btn-save sm" style="align-self:flex-start;margin-top:22px" onclick="loadReportPreview()">🔄 Load Preview</button>
+      </div>
+      <div class="reports-grid">
+        <div class="report-tile">
+          <h3>📋 Morning ADP — CSV</h3>
+          <p>Opening plan with estimated time &amp; transactions. Opens in Excel or Google Sheets.</p>
+          <button class="btn-dl" onclick="downloadCSV('opening')">⬇ Download Morning CSV</button>
+        </div>
+        <div class="report-tile">
+          <h3>✅ Evening ADP — CSV</h3>
+          <p>Closing report with actual time &amp; transactions alongside estimates.</p>
+          <button class="btn-dl gold" onclick="downloadCSV('closing')">⬇ Download Evening CSV</button>
+        </div>
+        <div class="report-tile">
+          <h3>🖼️ Morning ADP — PNG</h3>
+          <p>High-res crisp image for WhatsApp at 10 AM. Text wraps, no cutoff.</p>
+          <button class="btn-dl" onclick="downloadPNG('opening')">⬇ Download Morning PNG</button>
+        </div>
+        <div class="report-tile">
+          <h3>🖼️ Evening ADP — PNG</h3>
+          <p>High-res crisp image for WhatsApp at 6 PM with actuals column.</p>
+          <button class="btn-dl gold" onclick="downloadPNG('closing')">⬇ Download Evening PNG</button>
+        </div>
+      </div>
+      <!-- FIX 5: Preview + save image from website -->
+      <div id="previewSection" style="display:none">
+        <div class="section-hd" style="margin-top:.5rem">
+          <h2 style="font-size:14px">Report Preview</h2>
+        </div>
+        <div class="preview-section" id="rptPreview"></div>
+        <div class="preview-save-bar">
+          <button class="btn-save sm" onclick="savePreviewAsImage()">📷 Save Preview as Image</button>
+          <span style="font-size:12px;color:var(--muted);align-self:center">Save a clean image of the table shown above</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBERS -->
+    <div id="tab-members" class="tab-pane" style="display:none">
+      <div class="section-hd"><h2>Manage Team Members</h2></div>
+      <div class="add-member-form">
+        <h3>➕ Add New Member</h3>
+        <div class="amrow">
+          <div class="field-wrap"><label>First Name</label><input id="mFirst" placeholder="e.g. Anagha"/></div>
+          <div class="field-wrap"><label>Last Name</label><input id="mLast" placeholder="e.g. Sharma"/></div>
+          <div class="field-wrap"><label>Username</label><input id="mUser" placeholder="e.g. anagha.s"/></div>
+          <div class="field-wrap"><label>Password</label><input id="mPass" type="password" placeholder="Set password"/></div>
+          <div style="padding-bottom:1px"><button class="btn-save" style="padding:9px 18px;width:100%" onclick="addMember()">Add</button></div>
+        </div>
+        <div class="err-msg" id="memberErr" style="margin-top:8px"></div>
+      </div>
+      <div class="member-grid" id="memberGrid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EDIT MEMBER MODAL (FIX 6) -->
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <h3>✏️ Edit Member</h3>
+    <p>Changes will update everywhere including the login page. Previous reports will reflect the new name automatically (FIX 7).</p>
+    <div class="modal-grid">
+      <div class="field-wrap"><label>First Name</label><input id="editFirst" placeholder="First name"/></div>
+      <div class="field-wrap"><label>Last Name</label><input id="editLast" placeholder="Last name (optional)"/></div>
+      <div class="field-wrap"><label>Username</label><input id="editUser" placeholder="Username"/></div>
+      <div class="field-wrap"><label>New Password</label><input id="editPass" type="password" placeholder="Leave blank to keep current"/></div>
+    </div>
+    <div class="err-msg" id="editErr"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-save" style="padding:9px 24px" onclick="saveEditMember()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-bg" id="delModal">
+  <div class="modal">
+    <h3>Remove Member?</h3>
+    <p><b id="delName"></b> will no longer be able to log in. <b>All their previous entries are kept</b> and will still appear in historical reports.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDelModal()">Cancel</button>
+      <button class="btn-save" style="background:var(--red);padding:9px 20px" onclick="confirmDelete()">Yes, Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader">
+  <div class="spinner"></div>
+  <p id="loaderMsg">Syncing…</p>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="imgCanvas" style="display:none"></canvas>
+
+<script>
+// ════════════════════════════════════════════
+//  CONSTANTS & DEFAULTS
+// ════════════════════════════════════════════
+const JSONBIN_BASE='https://api.jsonbin.io/v3';
+// ── HARDCODED CREDENTIALS — DO NOT SHARE THIS FILE PUBLICLY ──
+let API_KEY = '$2a$10$oZ/O08WlxH5RyeIcRsWnz.4szRzOdT9JvYxlHMgZR6l1rQRfHDvoC';
+let BIN_ID  = '6a0ff6f36877513b27b29164';
+
+const DEFAULT_MEMBERS=[
+  {first:'Anagha',   last:'',user:'anagha',    pass:'anagha123',    role:'staff'},
+  {first:'Anurag',   last:'',user:'anurag',    pass:'anurag123',    role:'staff'},
+  {first:'Anushka',  last:'',user:'anushka',   pass:'anushka123',   role:'staff'},
+  {first:'Atharva',  last:'',user:'atharva',   pass:'atharva123',   role:'staff'},
+  {first:'Bhushan',  last:'',user:'bhushan',   pass:'bhushan123',   role:'staff'},
+  {first:'Chaitanya',last:'',user:'chaitanya', pass:'chaitanya123', role:'staff'},
+  {first:'Manohar',  last:'',user:'manohar',   pass:'manohar123',   role:'staff'},
+  {first:'Gaurav',   last:'',user:'gaurav',    pass:'gaurav123',    role:'staff'},
+  {first:'Poorvi',   last:'',user:'poorvi',    pass:'poorvi123',    role:'staff'},
+  {first:'Parth',    last:'',user:'parth',     pass:'parth123',     role:'staff'},
+  {first:'Saee',     last:'',user:'saee',      pass:'saee123',      role:'staff'},
+  {first:'Suraj',    last:'',user:'suraj',     pass:'suraj123',     role:'staff'},
+  {first:'Mukesh',   last:'',user:'mukesh',    pass:'mukesh123',    role:'staff'},
+  {first:'Mayur',    last:'',user:'mayur',     pass:'mayur123',     role:'staff'},
+  {first:'Hitesh',   last:'',user:'hitesh',    pass:'hitesh123',    role:'staff'},
+];
+const ADMIN_MEMBER={first:'CA Parikshit',last:'',user:'admin',pass:'admin123',role:'admin'};
+
+const PROCESSES=['','Ledger Scrutiny','Purchase Vouching','Sales Vouching',
+  'Audit as per checklist','AIS Verification','Trail Balance Reco',
+  'Prepaid expense & Provisions','Audit of pending documents',
+  'Communication of observations & data requirement','Other (type below)'];
+
+// ════════════════════════════════════════════
+//  STORAGE HELPERS
+// ════════════════════════════════════════════
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsGet(k){try{const d=localStorage.getItem(k);return d?JSON.parse(d):null}catch(e){return null}}
+
+// ════════════════════════════════════════════
+//  JSONBIN API
+// ════════════════════════════════════════════
+let DB={entries:{},members:[],nameMap:{}};
+
+async function binRead(){
+  try{
+    const r=await fetch(JSONBIN_BASE+'/b/'+BIN_ID+'/latest',
+      {headers:{'X-Master-Key':API_KEY,'X-Bin-Meta':'false'}});
+    if(!r.ok)return null;
+    return await r.json();
+  }catch(e){return null}
+}
+async function binWrite(data){
+  try{
+    const r=await fetch(JSONBIN_BASE+'/b/'+BIN_ID,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,'X-Bin-Meta':'false'},
+      body:JSON.stringify(data)
+    });
+    return r.ok;
+  }catch(e){return false}
+}
+async function createBin(){
+  try{
+    const r=await fetch(JSONBIN_BASE+'/b',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Master-Key':API_KEY,
+        'X-Bin-Name':'PRUVN-ADP','X-Bin-Private':'true'},
+      body:JSON.stringify({entries:{},members:DEFAULT_MEMBERS,nameMap:{}})
+    });
+    if(!r.ok)return null;
+    const d=await r.json();
+    return d.metadata.id;
+  }catch(e){return null}
+}
+async function dbLoad(){
+  showLoader('Loading data from cloud…');
+  const data=await binRead();
+  if(data){
+    DB=data;
+    if(!DB.entries)DB.entries={};
+    if(!DB.members||!DB.members.length)DB.members=JSON.parse(JSON.stringify(DEFAULT_MEMBERS));
+    if(!DB.nameMap)DB.nameMap={};
+  }
+  hideLoader();
+  return !!data;
+}
+async function dbSave(){
+  setSyncStatus('syncing');
+  const ok=await binWrite(DB);
+  setSyncStatus(ok?'ok':'err');
+  return ok;
+}
+
+function ekey(user,type,date){return user+'__'+type+'__'+date}
+function getEntry(user,type,date){return DB.entries[ekey(user,type,date)]||null}
+function setEntry(user,type,date,val){DB.entries[ekey(user,type,date)]=val}
+function getMembers(){return DB.members&&DB.members.length?DB.members:DEFAULT_MEMBERS}
+
+// FIX 7: nameMap stores username→current full name for historical display
+// When a member's name changes, we update nameMap[username] = newFullName
+// Reports always look up nameMap[username] to get the current display name
+function resolveDisplayName(username){
+  if(DB.nameMap&&DB.nameMap[username])return DB.nameMap[username];
+  const m=getMembers().find(x=>x.user===username);
+  if(m)return fullName(m);
+  return username; // fallback: show username if member deleted
+}
+function fullName(m){return (m.last?m.first+' '+m.last:m.first).trim()}
+
+// ════════════════════════════════════════════
+//  SETUP
+// ════════════════════════════════════════════
+async function initApp(){
+  // Credentials are hardcoded in this file — no setup screen needed on any device.
+  // FIX 1: Check remembered login — auto-login if token saved
+  const remembered=lsGet('pruvn_remember');
+  if(remembered&&remembered.user&&remembered.pass){
+    // Auto-login silently
+    await dbLoad();
+    let member=null;
+    if(remembered.user==='admin'){
+      if(remembered.pass===ADMIN_MEMBER.pass)member={...ADMIN_MEMBER};
+    } else {
+      const m=getMembers().find(x=>x.user===remembered.user);
+      if(m&&m.pass===remembered.pass)member={...m};
+    }
+    if(member){
+      enterApp(member);
+      return;
+    }
+    // Remember token stale — clear it
+    lsSet('pruvn_remember',null);
+  }
+  document.getElementById('loginPage').classList.add('visible');
+  buildLoginDropdown();
+}
+
+
+// ════════════════════════════════════════════
+//  AUTH
+// ════════════════════════════════════════════
+let CU=null;
+// Always returns the ACTUAL current local date (IST/any timezone safe)
+function getToday(){
+  const d = new Date();
+  const yr = d.getFullYear();
+  const mo = String(d.getMonth()+1).padStart(2,'0');
+  const dy = String(d.getDate()).padStart(2,'0');
+  return yr+'-'+mo+'-'+dy;
+}
+function fmtDate(d){const p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0]}
+
+function buildLoginDropdown(){
+  const sel=document.getElementById('loginRole');
+  sel.innerHTML='<option value="">— Select Member —</option>';
+  const ao=document.createElement('option');
+  ao.value='admin';ao.textContent='CA Parikshit (Admin)';sel.appendChild(ao);
+  const grp=document.createElement('optgroup');grp.label='Audit Articles';
+  getMembers().forEach(m=>{
+    const o=document.createElement('option');o.value=m.user;
+    o.textContent=fullName(m);grp.appendChild(o);
+  });
+  sel.appendChild(grp);
+}
+
+async function doLogin(){
+  const uname=document.getElementById('loginRole').value;
+  const pass=document.getElementById('loginPass').value.trim();
+  const rememberChecked=document.getElementById('rememberMe').checked;
+  if(!uname){showLoginErr('Please select your name.');return}
+  if(!pass){showLoginErr('Please enter your password.');return}
+  showLoader('Signing in…');
+  await dbLoad();
+  hideLoader();
+  let member=null;
+  if(uname==='admin'){
+    if(pass!==ADMIN_MEMBER.pass){showLoginErr('Incorrect password.');return}
+    member={...ADMIN_MEMBER};
+  } else {
+    const m=getMembers().find(x=>x.user===uname);
+    if(!m){showLoginErr('Member not found.');return}
+    if(m.pass!==pass){showLoginErr('Incorrect password.');return}
+    member={...m};
+  }
+  // FIX 1: Save remember token
+  if(rememberChecked){
+    lsSet('pruvn_remember',{user:uname,pass:pass});
+  } else {
+    lsSet('pruvn_remember',null);
+  }
+  document.getElementById('loginErr').style.display='none';
+  enterApp(member);
+}
+
+function enterApp(member){
+  CU=member;
+  const isAdmin=CU.role==='admin';
+  document.getElementById('loginPage').classList.remove('visible');
+  document.getElementById('appPage').classList.add('visible');
+  document.getElementById('topUser').textContent=fullName(CU);
+  document.getElementById('topPill').textContent=isAdmin?'ADMIN':'STAFF';
+  if(isAdmin)document.getElementById('topPill').classList.add('admin');
+  document.getElementById('bannerDate').textContent=fmtDate(getToday());
+  document.getElementById('opDate').textContent=fmtDate(getToday());
+  document.getElementById('clDate').textContent=fmtDate(getToday());
+  document.getElementById('opPrepBy').textContent=fullName(CU);
+  document.getElementById('clPrepBy').textContent=fullName(CU);
+  document.getElementById('rptDate').value=getToday();
+  if(isAdmin)document.getElementById('ntab-members').style.display='flex';
+  buildReportMemberDropdown();
+  loadEntries('opening');
+  loadEntries('closing');
+}
+
+function showLoginErr(msg){const e=document.getElementById('loginErr');e.textContent=msg;e.style.display='block'}
+
+function doLogout(){
+  CU=null;
+  // Don't clear remember — they want to stay remembered
+  document.getElementById('appPage').classList.remove('visible');
+  document.getElementById('loginPage').classList.add('visible');
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('ntab-members').style.display='none';
+  showTab('opening');
+  buildLoginDropdown();
+  // Restore saved username if remembered
+  const rem=lsGet('pruvn_remember');
+  if(rem&&rem.user){
+    document.getElementById('loginRole').value=rem.user;
+    document.getElementById('rememberMe').checked=true;
+  }
+}
+
+// ════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════
+const TABS=['opening','closing','team','reports','members'];
+function showTab(name){
+  TABS.forEach(t=>{
+    const p=document.getElementById('tab-'+t);
+    const n=document.getElementById('ntab-'+t);
+    if(p)p.style.display=t===name?'block':'none';
+    if(n){n.classList.remove('active');if(t===name)n.classList.add('active')}
+  });
+  if(name==='team')renderTeam();
+  if(name==='members')renderMemberGrid();
+}
+
+// ════════════════════════════════════════════
+//  TASK ROW BUILDER
+// ════════════════════════════════════════════
+let tc={opening:0,closing:0};
+function procOpts(sel){
+  return PROCESSES.map(p=>'<option value="'+p+'"'+(sel===p?' selected':'')+'>'+
+    (p||'-- Select Process --')+'</option>').join('');
+}
+function makeRow(type,idx,data,autoFilled){
+  data=data||{};
+  const id='trow_'+type+'_'+idx;
+  const isC=type==='closing';
+  const sp=data.processSel||'',fp=data.processFree||'';
+  const showFree=sp==='Other (type below)'||(!sp&&fp);
+  const af=autoFilled?'auto-filled':'';
+  return '<div class="task-card" id="'+id+'">'
+    +'<div class="task-card-header"><span class="task-row-label">Row '+(idx+1)+'</span>'
+    +'<button class="btn-remove" onclick="document.getElementById(\''+id+'\').remove()">✕ Remove</button></div>'
+    +'<div class="form-grid g3">'
+    +'<div class="field-wrap"><label>Client Name</label>'
+    +'<input data-f="client" class="'+af+'" placeholder="Client name" value="'+(data.client||'')+'"/></div>'
+    +'<div class="field-wrap"><label>Field / Desk</label>'
+    +'<select data-f="ftype" class="'+af+'">'
+    +'<option'+((data.ftype||'Desk')==='Desk'?' selected':'')+'>Desk</option>'
+    +'<option'+(data.ftype==='Field'?' selected':'')+'>Field</option>'
+    +'</select></div>'
+    +'<div class="field-wrap"><label>Audit Process</label><div class="process-wrap">'
+    +'<select data-f="processSel" class="'+af+'" onchange="toggleFree(this,\''+id+'\')">'
+    +procOpts(sp)+'</select>'
+    +'<input data-f="processFree" placeholder="Describe…" value="'+fp+'" style="display:'+(showFree?'block':'none')+'"/>'
+    +'</div></div></div>'
+    +'<div class="form-grid '+(isC?'g4':'g2')+'">'
+    +'<div class="field-wrap"><label>Est. Time (min)</label>'
+    +'<input data-f="estTime" type="number" min="0" class="'+af+'" placeholder="e.g. 180" value="'+(data.estTime||'')+'"/></div>'
+    +'<div class="field-wrap"><label>Est. No. of TXN</label>'
+    +'<input data-f="estTxn" type="number" min="0" class="'+af+'" placeholder="e.g. 50" value="'+(data.estTxn||'')+'"/></div>'
+    +(isC?'<div class="field-wrap"><label>Actual Time (min)</label>'
+        +'<input data-f="actTime" type="number" min="0" placeholder="e.g. 200" value="'+(data.actTime||'')+'"/></div>'
+        +'<div class="field-wrap"><label>Actual No. of TXN</label>'
+        +'<input data-f="actTxn" type="number" min="0" placeholder="e.g. 55" value="'+(data.actTxn||'')+'"/></div>':'')
+    +'</div></div>';
+}
+function toggleFree(sel,rowId){
+  const fi=document.getElementById(rowId).querySelector('[data-f="processFree"]');
+  fi.style.display=sel.value==='Other (type below)'?'block':'none';
+  if(sel.value!=='Other (type below)')fi.value='';
+}
+function addTask(type){
+  document.getElementById(type+'Tasks').insertAdjacentHTML('beforeend',makeRow(type,tc[type]++));
+}
+function collectTasks(type){
+  const rows=[];
+  document.querySelectorAll('[id^="trow_'+type+'_"]').forEach(function(card){
+    function g(f){const e=card.querySelector('[data-f="'+f+'"]');return e?e.value.trim():''}
+    const ps=g('processSel'),pf=g('processFree');
+    rows.push({client:g('client'),ftype:g('ftype'),processSel:ps,processFree:pf,
+      process:ps==='Other (type below)'?pf:(ps||pf),
+      estTime:g('estTime'),estTxn:g('estTxn'),actTime:g('actTime'),actTxn:g('actTxn')});
+  });
+  return rows;
+}
+function renderTasks(type,tasks,autoFilled){
+  const c=document.getElementById(type+'Tasks');
+  c.innerHTML='';tc[type]=0;
+  (tasks||[]).forEach(function(t,i){
+    c.insertAdjacentHTML('beforeend',makeRow(type,tc[type]++,t,autoFilled));
+  });
+}
+
+// ════════════════════════════════════════════
+//  LOAD / SAVE  (FIX 3: evening auto-fills from morning)
+// ════════════════════════════════════════════
+function loadEntries(type){
+  const entry=getEntry(CU.user,type,getToday());
+  if(type==='closing'){
+    const morningEntry=getEntry(CU.user,'opening',getToday());
+    if(!entry&&morningEntry&&morningEntry.tasks&&morningEntry.tasks.some(t=>t.client)){
+      // Auto-fill evening from morning — mark as auto-filled (light blue)
+      renderTasks('closing',morningEntry.tasks,true);
+      document.getElementById('eveningAutoBanner').style.display='flex';
+    } else {
+      renderTasks('closing',entry&&entry.tasks&&entry.tasks.length?entry.tasks:[{},{},{}],false);
+      document.getElementById('eveningAutoBanner').style.display='none';
+    }
+  } else {
+    renderTasks(type,entry&&entry.tasks&&entry.tasks.length?entry.tasks:[{},{},{}],false);
+  }
+}
+
+async function saveTasks(type){
+  const tasks=collectTasks(type);
+  setEntry(CU.user,type,getToday(),{tasks,savedAt:new Date().toISOString(),preparedBy:fullName(CU),userKey:CU.user});
+  showLoader('Saving to cloud…');
+  const ok=await dbSave();
+  hideLoader();
+  const ts=document.getElementById(type==='opening'?'opSaveTs':'clSaveTs');
+  if(ok){
+    ts.textContent='☁️ Synced at '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    showToast('Saved & synced! Everyone can now see your entry.');
+    if(type==='opening'){
+      // Refresh evening auto-fill hint
+      loadEntries('closing');
+    }
+  } else {
+    ts.textContent='⚠️ Sync failed — check internet';
+    showToast('Sync failed. Check your connection.');
+  }
+}
+
+// ════════════════════════════════════════════
+//  TEAM OVERVIEW
+// ════════════════════════════════════════════
+async function renderTeam(){
+  document.getElementById('teamDateLabel').textContent=fmtDate(getToday());
+  showLoader('Loading team status…');
+  await dbLoad();
+  hideLoader();
+  const members=getMembers();
+  let html='<table><thead><tr><th>#</th><th>Full Name</th><th>Username</th>'
+    +'<th>Morning</th><th>Evening</th><th>Last Saved</th><th>Tasks</th></tr></thead><tbody>';
+  members.forEach(function(m,i){
+    const op=getEntry(m.user,'opening',getToday());
+    const cl=getEntry(m.user,'closing',getToday());
+    const opOk=op&&op.tasks&&op.tasks.some(t=>t.client);
+    const clOk=cl&&cl.tasks&&cl.tasks.some(t=>t.client);
+    const last=cl&&cl.savedAt?cl.savedAt:(op&&op.savedAt?op.savedAt:null);
+    const cnt=(op&&op.tasks?op.tasks.filter(t=>t.client).length:0)
+             +(cl&&cl.tasks?cl.tasks.filter(t=>t.client).length:0);
+    const lastFmt=last?new Date(last).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+    html+='<tr><td style="color:var(--muted2)">'+(i+1)+'</td>'
+      +'<td><b>'+fullName(m)+'</b></td>'
+      +'<td style="font-size:12px;color:var(--muted)">'+m.user+'</td>'
+      +'<td><span class="status-badge '+(opOk?'badge-done':'badge-empty')+'">'
+      +'<span class="dot '+(opOk?'dot-g':'dot-e')+'"></span>'+(opOk?'Submitted':'Pending')+'</span></td>'
+      +'<td><span class="status-badge '+(clOk?'badge-done':'badge-pend')+'">'
+      +'<span class="dot '+(clOk?'dot-g':'dot-a')+'"></span>'+(clOk?'Submitted':'Pending')+'</span></td>'
+      +'<td style="color:var(--muted);font-size:12px">'+lastFmt+'</td>'
+      +'<td style="font-weight:700;color:var(--navy)">'+(cnt||'—')+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('teamTable').innerHTML=html;
+}
+
+// ════════════════════════════════════════════
+//  MANAGE MEMBERS (FIX 6: edit + FIX 7: nameMap)
+// ════════════════════════════════════════════
+let pendingDeleteUser='', editingUser='';
+
+function renderMemberGrid(){
+  const members=getMembers();
+  const grid=document.getElementById('memberGrid');
+  grid.innerHTML='';
+  if(!members.length){grid.innerHTML='<p style="color:var(--muted);font-size:13px">No members yet.</p>';return}
+  members.forEach(function(m){
+    const chip=document.createElement('div');chip.className='member-chip';
+    chip.innerHTML='<div class="minfo"><div class="mname">'+fullName(m)+'</div>'
+      +'<div class="muname">@'+m.user+'</div></div>'
+      +'<div class="chip-btns">'
+      +'<button class="chip-edit" onclick="openEditModal(\''+m.user+'\')">✏️ Edit</button>'
+      +'<button class="chip-del" onclick="openDelModal(\''+m.user+'\',\''+fullName(m).replace(/'/g,"\\'")+'\')">Remove</button>'
+      +'</div>';
+    grid.appendChild(chip);
+  });
+}
+
+async function addMember(){
+  const first=document.getElementById('mFirst').value.trim();
+  const last=document.getElementById('mLast').value.trim();
+  const user=document.getElementById('mUser').value.trim().toLowerCase().replace(/\s+/g,'.');
+  const pass=document.getElementById('mPass').value.trim();
+  const err=document.getElementById('memberErr');
+  if(!first){err.textContent='First name required.';err.style.display='block';return}
+  if(!user){err.textContent='Username required.';err.style.display='block';return}
+  if(!pass){err.textContent='Password required.';err.style.display='block';return}
+  if(user==='admin'){err.textContent='"admin" is reserved.';err.style.display='block';return}
+  if(getMembers().find(m=>m.user===user)){err.textContent='Username already exists.';err.style.display='block';return}
+  err.style.display='none';
+  const newMember={first,last,user,pass,role:'staff'};
+  DB.members.push(newMember);
+  DB.nameMap[user]=fullName(newMember);
+  showLoader('Saving…');await dbSave();hideLoader();
+  ['mFirst','mLast','mUser','mPass'].forEach(id=>document.getElementById(id).value='');
+  renderMemberGrid();buildLoginDropdown();buildReportMemberDropdown();
+  showToast(fullName({first,last})+' added!');
+}
+
+// FIX 6: Edit member
+function openEditModal(uname){
+  editingUser=uname;
+  const m=getMembers().find(x=>x.user===uname);
+  if(!m)return;
+  document.getElementById('editFirst').value=m.first;
+  document.getElementById('editLast').value=m.last||'';
+  document.getElementById('editUser').value=m.user;
+  document.getElementById('editPass').value='';
+  document.getElementById('editErr').style.display='none';
+  document.getElementById('editModal').classList.add('open');
+}
+function closeEditModal(){document.getElementById('editModal').classList.remove('open');editingUser=''}
+
+async function saveEditMember(){
+  const first=document.getElementById('editFirst').value.trim();
+  const last=document.getElementById('editLast').value.trim();
+  const newUser=document.getElementById('editUser').value.trim().toLowerCase().replace(/\s+/g,'.');
+  const newPass=document.getElementById('editPass').value.trim();
+  const err=document.getElementById('editErr');
+  if(!first){err.textContent='First name required.';err.style.display='block';return}
+  if(!newUser){err.textContent='Username required.';err.style.display='block';return}
+  if(newUser==='admin'){err.textContent='"admin" is reserved.';err.style.display='block';return}
+  // Check duplicate username (excluding self)
+  if(newUser!==editingUser&&getMembers().find(m=>m.user===newUser)){
+    err.textContent='Username already taken.';err.style.display='block';return;
+  }
+  err.style.display='none';
+  const idx=DB.members.findIndex(m=>m.user===editingUser);
+  if(idx<0)return;
+  const oldUser=editingUser;
+  DB.members[idx].first=first;
+  DB.members[idx].last=last;
+  DB.members[idx].user=newUser;
+  if(newPass)DB.members[idx].pass=newPass;
+  // FIX 7: Update nameMap so old reports show new name
+  const newFull=fullName(DB.members[idx]);
+  DB.nameMap[newUser]=newFull;
+  if(oldUser!==newUser){
+    // Migrate all entries from oldUser to newUser key
+    const keys=Object.keys(DB.entries);
+    keys.forEach(k=>{
+      if(k.startsWith(oldUser+'__')){
+        const newKey=newUser+k.slice(oldUser.length);
+        DB.entries[newKey]=DB.entries[k];
+        delete DB.entries[k];
+      }
+    });
+    DB.nameMap[oldUser]=newFull; // also map old username → new name for any stale refs
+    // Update remember-me if it was this user
+    const rem=lsGet('pruvn_remember');
+    if(rem&&rem.user===oldUser){
+      lsSet('pruvn_remember',{user:newUser,pass:newPass||rem.pass});
+    }
+  }
+  showLoader('Saving changes…');await dbSave();hideLoader();
+  closeEditModal();
+  renderMemberGrid();buildLoginDropdown();buildReportMemberDropdown();
+  showToast('Member updated! Name reflects in all reports.');
+}
+
+function openDelModal(uname,name){
+  pendingDeleteUser=uname;
+  document.getElementById('delName').textContent=name;
+  document.getElementById('delModal').classList.add('open');
+}
+function closeDelModal(){document.getElementById('delModal').classList.remove('open');pendingDeleteUser=''}
+
+async function confirmDelete(){
+  if(!pendingDeleteUser)return;
+  // FIX 7: Keep entries, just remove from members list
+  // Store name in nameMap so historical reports still show their name
+  const m=DB.members.find(x=>x.user===pendingDeleteUser);
+  if(m)DB.nameMap[pendingDeleteUser]=fullName(m);
+  DB.members=DB.members.filter(m=>m.user!==pendingDeleteUser);
+  showLoader('Removing member…');await dbSave();hideLoader();
+  closeDelModal();
+  renderMemberGrid();buildLoginDropdown();buildReportMemberDropdown();
+  showToast('Member removed. Historical records kept.');
+}
+
+// ════════════════════════════════════════════
+//  REPORT DATA  (FIX 2: grouped rows by person)
+// ════════════════════════════════════════════
+function buildReportMemberDropdown(){
+  const sel=document.getElementById('rptMember');
+  sel.innerHTML='<option value="ALL">All Members</option>';
+  getMembers().forEach(m=>{
+    const o=document.createElement('option');o.value=m.user;o.textContent=fullName(m);sel.appendChild(o);
+  });
+}
+
+// Returns grouped data: [{srNo, username, displayName, tasks:[...]}, ...]
+async function getGroupedRows(type,date,memberUser){
+  showLoader('Fetching latest data…');
+  await dbLoad();
+  hideLoader();
+  const members=memberUser==='ALL'?getMembers():getMembers().filter(m=>m.user===memberUser);
+  const groups=[];let srNo=1;
+  members.forEach(m=>{
+    const d=getEntry(m.user,type,date);
+    const tasks=(d&&d.tasks)||[];
+    const valid=tasks.filter(t=>t.client);
+    // FIX 7: Always use resolveDisplayName for current/correct name
+    const displayName=resolveDisplayName(m.user);
+    if(valid.length){
+      groups.push({srNo:srNo++,username:m.user,displayName,tasks:valid});
+    } else {
+      groups.push({srNo:srNo++,username:m.user,displayName,tasks:[]});
+    }
+  });
+  return groups;
+}
+
+// ════════════════════════════════════════════
+//  REPORT PREVIEW  (FIX 2: grouped format)
+// ════════════════════════════════════════════
+let lastPreviewType='opening';
+
+async function loadReportPreview(){
+  const date=document.getElementById('rptDate').value||getToday();
+  const mu=document.getElementById('rptMember').value;
+  const type=document.getElementById('rptType').value;
+  lastPreviewType=type;
+  const isC=type==='closing';
+  const groups=await getGroupedRows(type,date,mu);
+
+  let html='<table><thead>'
+    +'<tr class="ptitle"><td colspan="'+(isC?9:7)+'">PRUVN And Associates — '+(isC?'Evening':'Morning')+' ADP ('+fmtDate(date)+')</td></tr>'
+    +'<tr class="psubhead"><td>Sr.No</td><td>Audit Article</td><td>Client Name</td><td>Field/Desk</td>'
+    +'<td>Audit Process</td><td>Est. Time</td><td>Est. TXN</td>'
+    +(isC?'<td>Actual Time</td><td>Actual TXN</td>':'')
+    +'</tr></thead><tbody>';
+
+  groups.forEach(g=>{
+    if(!g.tasks.length){
+      // Person has no entries — one blank row
+      html+='<tr>'
+        +'<td class="sr-cell">'+g.srNo+'</td>'
+        +'<td class="article-cell">'+g.displayName+'</td>'
+        +'<td colspan="'+(isC?7:5)+'" style="color:var(--muted2);font-style:italic">No entry submitted</td>'
+        +'</tr>';
+    } else {
+      // FIX 2: First task row shows Sr.No and Name; subsequent rows leave them blank
+      g.tasks.forEach(function(t,ti){
+        html+='<tr'+(ti>0?' class="sub-row"':'')+'>'; 
+        if(ti===0){
+          html+='<td class="sr-cell">'+g.srNo+'</td>'
+            +'<td class="article-cell">'+g.displayName+'</td>';
+        } else {
+          // blank sr & name cells — visually grouped
+          html+='<td class="sr-cell" style="color:transparent;border-top:none"> </td>'
+            +'<td style="border-top:none"> </td>';
+        }
+        html+='<td>'+escHtml(t.client)+'</td>'
+          +'<td>'+escHtml(t.ftype||'Desk')+'</td>'
+          +'<td>'+escHtml(t.process||'')+'</td>'
+          +'<td>'+(t.estTime?t.estTime+' Min':'')+'</td>'
+          +'<td>'+(t.estTxn||'')+'</td>'
+          +(isC?'<td>'+(t.actTime?t.actTime+' Min':'')+'</td><td>'+(t.actTxn||'')+'</td>':'')
+          +'</tr>';
+      });
+    }
+  });
+  html+='</tbody></table>';
+  document.getElementById('rptPreview').innerHTML=html;
+  document.getElementById('previewSection').style.display='block';
+}
+
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// ════════════════════════════════════════════
+//  CSV DOWNLOAD  (FIX 2: grouped)
+// ════════════════════════════════════════════
+async function downloadCSV(type){
+  const date=document.getElementById('rptDate').value||getToday();
+  const mu=document.getElementById('rptMember').value;
+  const groups=await getGroupedRows(type,date,mu);
+  const isC=type==='closing';
+  const prepBy=fullName(CU);
+  function esc(v){return '"'+String(v||'').replace(/"/g,'""')+'"'}
+  let csv='PRUVN And Associates\n'
+    +'Audit Day Plan,ADP,,,,Date,'+fmtDate(date)+'\n'
+    +'To be shared on Whatsapp daily at '+(isC?'6 Pm':'10 am')+'\n'
+    +'Prepared by,'+prepBy+'\nReviewed by,CA Parikshit\n\n';
+  const header=isC
+    ?'Sr.No,Audit Article,Client Name,Field/Desk,Audit Process,Est Time (Min),Est No of TXN,Actual Time (Min),Actual No of TXN\n'
+    :'Sr.No,Audit Article,Client Name,Field/Desk,Audit Process,Est Time (Min),Est No of TXN\n';
+  csv+=header;
+  groups.forEach(g=>{
+    if(!g.tasks.length){
+      csv+=g.srNo+','+esc(g.displayName)+',,,,,,\n';
+    } else {
+      g.tasks.forEach(function(t,ti){
+        const srCol=ti===0?g.srNo:'';
+        const nameCol=ti===0?esc(g.displayName):'';
+        if(isC){
+          csv+=srCol+','+nameCol+','+esc(t.client)+','+esc(t.ftype)+','+esc(t.process)+','+t.estTime+','+t.estTxn+','+t.actTime+','+t.actTxn+'\n';
+        } else {
+          csv+=srCol+','+nameCol+','+esc(t.client)+','+esc(t.ftype)+','+esc(t.process)+','+t.estTime+','+t.estTxn+'\n';
+        }
+      });
+    }
+  });
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='PRUVN_ADP_'+type+'_'+date+'.csv';a.click();
+  showToast('CSV downloaded!');
+}
+
+// ════════════════════════════════════════════
+//  PNG DOWNLOAD  (FIX 4: text wrap + auto row height, FIX 2: grouped)
+// ════════════════════════════════════════════
+async function downloadPNG(type){
+  const date=document.getElementById('rptDate').value||getToday();
+  const mu=document.getElementById('rptMember').value;
+  const groups=await getGroupedRows(type,date,mu);
+  renderPNG(type,date,groups,function(blob){
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='PRUVN_ADP_'+type+'_'+date+'.png';a.click();
+    showToast('High-res PNG downloaded!');
+  });
+}
+
+// FIX 5: Save preview as image
+async function savePreviewAsImage(){
+  const date=document.getElementById('rptDate').value||getToday();
+  const mu=document.getElementById('rptMember').value;
+  const type=document.getElementById('rptType').value;
+  const groups=await getGroupedRows(type,date,mu);
+  renderPNG(type,date,groups,function(blob){
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='PRUVN_ADP_Preview_'+type+'_'+date+'.png';a.click();
+    showToast('Preview image saved!');
+  });
+}
+
+function renderPNG(type,date,groups,callback){
+  const isC=type==='closing';
+  const prepBy=fullName(CU);
+  const SCALE=3;
+  const canvas=document.getElementById('imgCanvas');
+  const ctx=canvas.getContext('2d');
+
+  const FONT='11px Segoe UI,Arial';
+  const FONT_B='bold 11px Segoe UI,Arial';
+
+  // Column definitions
+  const cols=isC
+    ?[{l:'Sr.No',w:40},{l:'Audit Article',w:110},{l:'Client Name',w:140},{l:'Field/Desk',w:72},
+      {l:'Audit Process',w:190},{l:'Est. Time',w:72},{l:'Est. TXN',w:62},{l:'Actual Time',w:80},{l:'Actual TXN',w:70}]
+    :[{l:'Sr.No',w:44},{l:'Audit Article',w:120},{l:'Client Name',w:165},{l:'Field/Desk',w:80},
+      {l:'Audit Process',w:235},{l:'Est. Time',w:82},{l:'Est. TXN',w:72}];
+
+  const PAD=16, HH=30, META_LINES=6;
+  const totalW=cols.reduce((a,c)=>a+c.w,0)+PAD*2;
+
+  // FIX 4: Pre-calculate each row's height based on text wrap
+  ctx.font=FONT;
+  function wrapText(text,maxW){
+    const words=String(text||'').split(' ');
+    const lines=[];let line='';
+    words.forEach(w=>{
+      const test=line?line+' '+w:w;
+      if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=w;}
+      else line=test;
+    });
+    if(line)lines.push(line);
+    return lines.length?lines:[''];
+  }
+
+  const CELL_PAD=8, LINE_H=15, MIN_ROW_H=26;
+  // Build row data with pre-computed heights
+  const renderRows=[];
+  groups.forEach(g=>{
+    if(!g.tasks.length){
+      renderRows.push({srNo:g.srNo,name:g.displayName,isFirst:true,task:null,rowH:MIN_ROW_H});
+      return;
+    }
+    g.tasks.forEach(function(t,ti){
+      // Compute wrapped lines for each cell
+      const vals=[
+        ti===0?String(g.srNo):'',
+        ti===0?g.displayName:'',
+        t.client||'',t.ftype||'Desk',t.process||'',
+        t.estTime?t.estTime+' Min':'',t.estTxn||''
+      ];
+      if(isC){vals.push(t.actTime?t.actTime+' Min':'',t.actTxn||'')}
+      const wrapped=vals.map((v,i)=>wrapText(v,cols[i].w-CELL_PAD*2));
+      const maxLines=wrapped.reduce((a,b)=>Math.max(a,b.length),1);
+      const rowH=Math.max(MIN_ROW_H,maxLines*LINE_H+10);
+      renderRows.push({srNo:g.srNo,name:g.displayName,isFirst:ti===0,task:t,vals,wrapped,rowH});
+    });
+  });
+
+  const metaH=26*META_LINES+8;
+  const totalH=metaH+HH+renderRows.reduce((a,r)=>a+r.rowH,0)+PAD+10;
+
+  canvas.width=totalW*SCALE;canvas.height=totalH*SCALE;
+  ctx.setTransform(1,0,0,1,0,0);ctx.scale(SCALE,SCALE);
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,totalW,totalH);
+
+  function drawTxt(text,x,y,font,color,align){
+    ctx.save();ctx.font=font;ctx.fillStyle=color;
+    ctx.textAlign=align||'left';ctx.textBaseline='middle';
+    ctx.fillText(text,x,y);ctx.restore();
+  }
+  function drawLine(x1,y1,x2,y2,color,lw){
+    ctx.save();ctx.strokeStyle=color||'#dde2ec';ctx.lineWidth=lw||0.5;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore();
+  }
+
+  let y=PAD;
+  // Header meta
+  ctx.fillStyle='#f0f4ff';ctx.fillRect(0,y-4,totalW,28);
+  drawTxt('PRUVN And Associates',totalW/2,y+12,'bold 15px Segoe UI,Arial','#1a2744','center');y+=26;
+  ctx.fillStyle='#e8ecf8';ctx.fillRect(0,y,totalW,24);
+  drawTxt('Audit Day Plan',PAD,y+12,'bold 12px Segoe UI,Arial','#1a2744');
+  drawTxt('ADP',PAD+128,y+12,'bold 12px Segoe UI,Arial','#e8970a');
+  drawTxt('Date: '+fmtDate(date),totalW-PAD,y+12,'bold 11px Segoe UI,Arial','#1a2744','right');y+=24;
+  drawTxt('To be shared on WhatsApp daily at '+(isC?'6 Pm':'10 am'),PAD,y+10,FONT,'#6b7a99');y+=20;
+  drawTxt('Prepared by: '+prepBy,PAD,y+10,FONT_B,'#1e2532');y+=20;
+  drawTxt('Reviewed by: CA Parikshit',PAD,y+10,FONT,'#1e2532');y+=20;
+
+  // Column header row
+  let x=PAD;
+  ctx.fillStyle='#1a2744';ctx.fillRect(0,y,totalW,HH);
+  cols.forEach(function(c,ci){
+    if(ci>0)drawLine(x,y,x,y+HH,'rgba(255,255,255,0.2)',0.5);
+    drawTxt(c.l,x+CELL_PAD,y+HH/2,'bold 10.5px Segoe UI,Arial','#fff');
+    x+=c.w;
+  });
+  y+=HH;
+
+  // Data rows
+  renderRows.forEach(function(row,ri){
+    ctx.fillStyle=ri%2===0?'#f5f8ff':'#fff';
+    ctx.fillRect(0,y,totalW,row.rowH);
+
+    if(row.task===null){
+      // No entry row
+      drawTxt(String(row.srNo),PAD+CELL_PAD,y+row.rowH/2,FONT_B,'#1a2744');
+      drawTxt(row.name,PAD+cols[0].w+CELL_PAD,y+row.rowH/2,FONT_B,'#243059');
+      drawTxt('No entry submitted',PAD+cols[0].w+cols[1].w+CELL_PAD,y+row.rowH/2,FONT,'#9aa3bb');
+    } else {
+      // FIX 4: Draw wrapped text per cell
+      let xi=PAD;
+      row.wrapped.forEach(function(lines,ci){
+        const startY=y+(row.rowH-(lines.length*LINE_H))/2+LINE_H/2;
+        lines.forEach(function(line,li){
+          const isBold=(ci===0&&row.isFirst)||(ci===1&&row.isFirst);
+          drawTxt(line,xi+CELL_PAD,startY+li*LINE_H,isBold?FONT_B:FONT,'#1e2532');
+        });
+        xi+=cols[ci].w;
+      });
+    }
+
+    // Row borders
+    drawLine(0,y+row.rowH,totalW,y+row.rowH,'#dde2ec',0.5);
+    let xi2=PAD;
+    cols.forEach(function(c,ci){
+      if(ci>0)drawLine(xi2,y,xi2,y+row.rowH,'#dde2ec',0.5);
+      xi2+=c.w;
+    });
+    y+=row.rowH;
+  });
+
+  // Outer border
+  ctx.strokeStyle='#c8d0e4';ctx.lineWidth=1;
+  ctx.strokeRect(0,PAD-4,totalW,y-PAD+4);
+
+  canvas.toBlob(function(blob){callback(blob)},'image/png',1.0);
+}
+
+// ════════════════════════════════════════════
+//  UI HELPERS
+// ════════════════════════════════════════════
+function showLoader(msg){
+  document.getElementById('loaderMsg').textContent=msg||'Loading…';
+  document.getElementById('loader').classList.add('visible');
+}
+function hideLoader(){document.getElementById('loader').classList.remove('visible')}
+function setSyncStatus(state){
+  const el=document.getElementById('syncStatus');
+  if(state==='ok'){el.textContent='🟢 Synced';el.className='sync-badge'}
+  else if(state==='syncing'){el.textContent='🔄 Syncing…';el.className='sync-badge'}
+  else{el.textContent='🔴 Error';el.className='sync-badge err'}
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3200);
+}
+
+
+// ── REPORT DATE SHORTCUTS ──
+function setRptDate(offsetDays){
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  const yr  = d.getFullYear();
+  const mo  = String(d.getMonth()+1).padStart(2,'0');
+  const dy  = String(d.getDate()).padStart(2,'0');
+  document.getElementById('rptDate').value = yr+'-'+mo+'-'+dy;
+}
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+
+// ── DATE CHANGE WATCHER ──
+// Checks every minute if the date has changed (e.g. app left open overnight)
+// If date changes, refreshes all date displays and reloads entries for the new day
+let _lastKnownDate = getToday();
+setInterval(function(){
+  const nowDate = getToday();
+  if(nowDate !== _lastKnownDate){
+    _lastKnownDate = nowDate;
+    console.log('Date changed to', nowDate, '— refreshing ADP data');
+    if(CU){
+      // Update all date displays
+      document.getElementById('bannerDate').textContent = fmtDate(nowDate);
+      document.getElementById('opDate').textContent     = fmtDate(nowDate);
+      document.getElementById('clDate').textContent     = fmtDate(nowDate);
+      document.getElementById('rptDate').value          = nowDate;
+      // Clear task entries and reload fresh (new day = empty slate)
+      loadEntries('opening');
+      loadEntries('closing');
+      // Clear save timestamps
+      document.getElementById('opSaveTs').textContent = '';
+      document.getElementById('clSaveTs').textContent = '';
+      showToast('📅 New day! Entries refreshed for ' + fmtDate(nowDate));
+    }
+  }
+}, 60000); // check every 60 seconds
+
+initApp();
+</script>
+</body>
+</html>
