@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PRUVN & Associates — Audit Day Plan Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f7;min-height:100vh}
+:root{
+  --navy:#1a2744;--navy2:#243059;--navy3:#2e3d6e;
+  --gold:#e8970a;--gold2:#f0a500;
+  --border:#dde2ec;--border2:#c8d0e4;
+  --text:#1e2532;--muted:#6b7a99;--muted2:#9aa3bb;
+  --green:#1a8c5a;--green-bg:#e8f8f0;
+  --red:#c0392b;--red-bg:#fdf0ee;
+  --amber:#c47f00;--amber-bg:#fdf4e0;
+}
+*::-webkit-scrollbar{width:6px;height:6px}
+*::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(145deg,#0f1a38 0%,#1a2744 50%,#243059 100%)}
+.login-box{background:#fff;border-radius:20px;padding:3rem 2.5rem 2.5rem;width:380px;box-shadow:0 24px 80px rgba(0,0,0,0.35)}
+.login-emblem{text-align:center;margin-bottom:2rem}
+.login-emblem .circle{width:64px;height:64px;border-radius:50%;background:var(--navy);display:inline-flex;align-items:center;justify-content:center;margin-bottom:.8rem}
+.login-emblem .circle span{color:#fff;font-size:22px;font-weight:800}
+.login-emblem h1{font-size:20px;font-weight:800;color:var(--navy)}
+.login-emblem p{font-size:12px;color:var(--muted);margin-top:3px}
+.form-group{margin-bottom:1.1rem}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.form-group select,.form-group input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);outline:none;transition:.2s;background:#fff}
+.form-group select:focus,.form-group input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,39,68,0.08)}
+.btn-login{width:100%;background:var(--navy);color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-login:hover{background:var(--navy2)}
+.err-msg{background:var(--red-bg);color:var(--red);font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:10px;display:none;border-left:3px solid var(--red)}
+.app-page{display:none;min-height:100vh;flex-direction:column}
+.app-page.visible{display:flex}
+.topbar{background:var(--navy);color:#fff;padding:0 1.8rem;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-brand{font-size:17px;font-weight:800;letter-spacing:.5px}
+.topbar-brand span{color:var(--gold2)}
+.pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(240,165,0,0.2);color:var(--gold2);border:1px solid rgba(240,165,0,0.3);letter-spacing:.5px;margin-left:8px}
+.pill.admin{background:rgba(240,165,0,0.35);color:#ffc84a}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.topbar-user{font-size:13px;opacity:.85}
+.btn-logout{background:transparent;color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-logout:hover{background:rgba(255,255,255,.1);color:#fff}
+.date-banner{background:linear-gradient(90deg,var(--navy2),var(--navy3));color:#fff;padding:8px 1.8rem;font-size:12px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.date-banner b{color:var(--gold2)}
+.nav-tabs{background:#fff;border-bottom:2px solid var(--border);padding:0 1.8rem;display:flex;overflow-x:auto}
+.nav-tab{padding:14px 18px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s;display:flex;align-items:center;gap:6px}
+.nav-tab:hover{color:var(--navy)}
+.nav-tab.active{color:var(--navy);border-bottom-color:var(--gold2)}
+.page-body{flex:1;padding:1.6rem 1.8rem;overflow-y:auto}
+.adp-meta-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.1rem 1.5rem;margin-bottom:1.2rem}
+.adp-meta-title{text-align:center;font-size:15px;font-weight:800;color:var(--navy);padding-bottom:.6rem;border-bottom:1px solid var(--border);margin-bottom:.7rem}
+.adp-meta-title span{color:var(--gold)}
+.adp-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.adp-meta-item label{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:2px}
+.adp-meta-item b{font-size:13px;color:var(--navy);font-weight:700}
+.task-card{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.1rem 1.3rem;margin-bottom:.7rem;transition:.15s}
+.task-card:hover{border-color:var(--border2);box-shadow:0 2px 12px rgba(26,39,68,0.07)}
+.task-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+.task-row-label{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px}
+.btn-remove{background:var(--red-bg);color:var(--red);border:1px solid #f5c6c1;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.form-grid{display:grid;gap:8px;margin-bottom:6px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1.8fr 1fr 2fr}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.field-wrap label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
+.field-wrap input,.field-wrap select{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);outline:none;transition:.15s;background:#fff;font-family:inherit}
+.field-wrap input:focus,.field-wrap select:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,39,68,0.07)}
+.process-wrap{display:flex;gap:6px}
+.process-wrap select{flex:1.2}
+.process-wrap input{flex:1.5}
+.btn-add-row{background:#f0f4ff;color:var(--navy);border:1.5px dashed var(--border2);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;width:100%;margin-bottom:1rem}
+.btn-add-row:hover{background:#e4eaff}
+.action-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.btn-save{background:var(--navy);color:#fff;border:none;padding:11px 28px;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+.btn-save:hover{background:var(--navy2)}
+.btn-save.gold{background:var(--gold);color:#fff}
+.btn-save.gold:hover{background:#d48800}
+.btn-save.sm{padding:8px 16px;font-size:12px}
+.save-ts{font-size:11.5px;color:var(--green);font-weight:600}
+.reports-filter{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1rem 1.4rem;margin-bottom:1.2rem;display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.reports-filter .field-wrap{flex:1;min-width:150px}
+.reports-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:1.2rem}
+.report-tile{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.3rem}
+.report-tile h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:.3rem}
+.report-tile p{font-size:12px;color:var(--muted);margin-bottom:.9rem;line-height:1.5}
+.btn-dl{display:block;width:100%;background:var(--navy);color:#fff;border:none;padding:10px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-align:center}
+.btn-dl:hover{background:var(--navy2)}
+.btn-dl.gold{background:var(--gold)}
+.btn-dl.gold:hover{background:#d48800}
+.preview-wrap{background:#fff;border-radius:12px;border:1.5px solid var(--border);overflow:auto}
+.preview-wrap table{width:100%;border-collapse:collapse;font-size:11.5px;min-width:700px}
+.preview-wrap thead th{background:var(--navy);color:#fff;padding:8px 9px;text-align:left;font-weight:700;white-space:nowrap}
+.preview-wrap tbody td{padding:7px 9px;border:1px solid var(--border);color:var(--text)}
+.preview-wrap tbody tr:nth-child(even) td{background:#f7f9ff}
+.team-table-wrap{background:#fff;border-radius:12px;border:1.5px solid var(--border);overflow:hidden}
+.team-table-wrap table{width:100%;border-collapse:collapse;font-size:13px}
+.team-table-wrap thead th{background:var(--navy);color:#fff;padding:10px 12px;text-align:left;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+.team-table-wrap tbody td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.team-table-wrap tbody tr:last-child td{border-bottom:none}
+.team-table-wrap tbody tr:hover td{background:#f7f9ff}
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.badge-done{background:var(--green-bg);color:var(--green)}
+.badge-pend{background:var(--amber-bg);color:var(--amber)}
+.badge-empty{background:#f0f2f7;color:var(--muted)}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.dot-g{background:var(--green)}.dot-a{background:#e8970a}.dot-e{background:#ccc}
+.member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem;margin-bottom:1rem}
+.member-chip{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.member-chip .mname{font-size:13px;font-weight:700;color:var(--navy)}
+.member-chip .muname{font-size:11px;color:var(--muted);margin-top:1px}
+.chip-del{background:var(--red-bg);color:var(--red);border:1px solid #f5c6c1;padding:4px 9px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.add-member-form{background:#fff;border-radius:12px;border:1.5px solid var(--border);padding:1.2rem;margin-bottom:1rem}
+.add-member-form h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:.8rem}
+.amrow{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:8px;align-items:flex-end}
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.section-hd h2{font-size:16px;font-weight:800;color:var(--navy)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:16px;padding:2rem;width:420px;max-width:95vw;box-shadow:0 12px 48px rgba(0,0,0,0.25)}
+.modal h3{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:.8rem}
+.modal p{font-size:13px;color:var(--muted);line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.2rem}
+.btn-cancel{background:#f0f2f7;color:var(--muted);border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;font-weight:700;z-index:9999;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.22)}
+@media(max-width:640px){
+  .adp-meta-grid{grid-template-columns:1fr 1fr}
+  .g3,.g4{grid-template-columns:1fr!important}
+  .reports-grid{grid-template-columns:1fr}
+  .page-body{padding:1rem}
+  .topbar{padding:0 1rem}
+  .amrow{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-emblem">
+      <div class="circle"><span>PA</span></div>
+      <h1>PRUVN &amp; Associates</h1>
+      <p>Audit Day Plan Portal</p>
+    </div>
+    <div class="err-msg" id="loginErr"></div>
+    <div class="form-group">
+      <label>Select Your Name</label>
+      <select id="loginRole"><option value="">— Select Member —</option></select>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Login to Portal →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app-page" id="appPage">
+  <div class="topbar">
+    <div style="display:flex;align-items:center">
+      <div class="topbar-brand">PRUVN <span>&</span> Associates</div>
+      <div class="pill" id="topPill">STAFF</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-user" id="topUser"></span>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+  <div class="date-banner">
+    <span>📅 Today: <b id="bannerDate"></b></span>
+    <span>🕙 Morning ADP at <b>10:00 AM</b></span>
+    <span>🕕 Evening ADP at <b>6:00 PM</b></span>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showTab('opening')" id="ntab-opening">📋 Morning Entry</div>
+    <div class="nav-tab" onclick="showTab('closing')" id="ntab-closing">✅ Evening Entry</div>
+    <div class="nav-tab" onclick="showTab('team')" id="ntab-team">👥 Team Overview</div>
+    <div class="nav-tab" onclick="showTab('reports')" id="ntab-reports">📊 Reports</div>
+    <div class="nav-tab" onclick="showTab('members')" id="ntab-members" style="display:none">⚙️ Manage Members</div>
+  </div>
+  <div class="page-body">
+
+    <!-- MORNING ENTRY -->
+    <div id="tab-opening" class="tab-pane">
+      <div class="adp-meta-card">
+        <div class="adp-meta-title">Audit Day Plan — <span>Morning Opening (ADP)</span></div>
+        <div class="adp-meta-grid">
+          <div class="adp-meta-item"><label>Date</label><b id="opDate"></b></div>
+          <div class="adp-meta-item"><label>Prepared by</label><b id="opPrepBy"></b></div>
+          <div class="adp-meta-item"><label>Shared via</label><b>WhatsApp at 10 AM</b></div>
+          <div class="adp-meta-item"><label>Reviewed by</label><b>CA Parikshit</b></div>
+        </div>
+      </div>
+      <div id="openingTasks"></div>
+      <button class="btn-add-row" onclick="addTask('opening')">＋ Add Client / Task Row</button>
+      <div class="action-bar">
+        <button class="btn-save" onclick="saveTasks('opening')">💾 Save Morning Entry</button>
+        <span class="save-ts" id="opSaveTs"></span>
+      </div>
+    </div>
+
+    <!-- EVENING ENTRY -->
+    <div id="tab-closing" class="tab-pane" style="display:none">
+      <div class="adp-meta-card">
+        <div class="adp-meta-title">Audit Day Plan — <span>Evening Closing (ADP)</span></div>
+        <div class="adp-meta-grid">
+          <div class="adp-meta-item"><label>Date</label><b id="clDate"></b></div>
+          <div class="adp-meta-item"><label>Prepared by</label><b id="clPrepBy"></b></div>
+          <div class="adp-meta-item"><label>Shared via</label><b>WhatsApp at 6 PM</b></div>
+          <div class="adp-meta-item"><label>Reviewed by</label><b>CA Parikshit</b></div>
+        </div>
+      </div>
+      <div id="closingTasks"></div>
+      <button class="btn-add-row" onclick="addTask('closing')">＋ Add Client / Task Row</button>
+      <div class="action-bar">
+        <button class="btn-save gold" onclick="saveTasks('closing')">💾 Save Evening Entry</button>
+        <span class="save-ts" id="clSaveTs"></span>
+      </div>
+    </div>
+
+    <!-- TEAM OVERVIEW -->
+    <div id="tab-team" class="tab-pane" style="display:none">
+      <div class="section-hd">
+        <h2>Team Submission Status — <span id="teamDateLabel"></span></h2>
+        <button class="btn-save sm" onclick="renderTeam()">🔄 Refresh</button>
+      </div>
+      <div class="team-table-wrap" id="teamTable"></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="tab-reports" class="tab-pane" style="display:none">
+      <div class="section-hd"><h2>Reports &amp; Export</h2></div>
+      <div class="reports-filter">
+        <div class="field-wrap"><label>Report Date</label><input type="date" id="rptDate"/></div>
+        <div class="field-wrap"><label>Team Member</label><select id="rptMember"><option value="ALL">All Members</option></select></div>
+        <button class="btn-save sm" style="align-self:flex-end" onclick="loadReportPreview()">Load Preview</button>
+      </div>
+      <div class="reports-grid">
+        <div class="report-tile">
+          <h3>📋 Morning ADP — CSV/Excel</h3>
+          <p>Opening plan with estimated time &amp; transactions. Opens in Excel or Google Sheets.</p>
+          <button class="btn-dl" onclick="downloadCSV('opening')">⬇ Download Morning CSV</button>
+        </div>
+        <div class="report-tile">
+          <h3>✅ Evening ADP — CSV/Excel</h3>
+          <p>Closing report with actual time &amp; transactions alongside estimates.</p>
+          <button class="btn-dl gold" onclick="downloadCSV('closing')">⬇ Download Evening CSV</button>
+        </div>
+        <div class="report-tile">
+          <h3>🖼️ Morning ADP — PNG Image</h3>
+          <p>High-resolution crisp table image ready to share on WhatsApp at 10 AM.</p>
+          <button class="btn-dl" onclick="downloadPNG('opening')">⬇ Download Morning PNG</button>
+        </div>
+        <div class="report-tile">
+          <h3>🖼️ Evening ADP — PNG Image</h3>
+          <p>High-resolution crisp table image ready to share on WhatsApp at 6 PM.</p>
+          <button class="btn-dl gold" onclick="downloadPNG('closing')">⬇ Download Evening PNG</button>
+        </div>
+      </div>
+      <div id="rptPreview"></div>
+    </div>
+
+    <!-- MANAGE MEMBERS -->
+    <div id="tab-members" class="tab-pane" style="display:none">
+      <div class="section-hd"><h2>Manage Team Members</h2></div>
+      <div class="add-member-form">
+        <h3>➕ Add New Member</h3>
+        <div class="amrow">
+          <div class="field-wrap"><label>First Name</label><input id="mFirst" placeholder="e.g. Anagha"/></div>
+          <div class="field-wrap"><label>Last Name</label><input id="mLast" placeholder="e.g. Sharma"/></div>
+          <div class="field-wrap"><label>Username (for login)</label><input id="mUser" placeholder="e.g. anagha.sharma"/></div>
+          <div class="field-wrap"><label>Password</label><input id="mPass" type="password" placeholder="Set a password"/></div>
+          <div style="padding-bottom:1px"><button class="btn-save" style="padding:9px 18px;white-space:nowrap;width:100%" onclick="addMember()">Add</button></div>
+        </div>
+        <div class="err-msg" id="memberErr" style="margin-top:8px"></div>
+      </div>
+      <div class="member-grid" id="memberGrid"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-bg" id="delModal">
+  <div class="modal">
+    <h3>Remove Member?</h3>
+    <p>Are you sure you want to remove <b id="delName"></b>? They will no longer be able to log in. Their saved entries will remain in storage.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDelModal()">Cancel</button>
+      <button class="btn-save" style="background:var(--red);padding:9px 20px" onclick="confirmDelete()">Yes, Remove</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="imgCanvas" style="display:none"></canvas>
+
+<script>
+// ─────────────────────────────────────
+// DEFAULT MEMBERS
+// ─────────────────────────────────────
+const DEFAULT_MEMBERS = [
+  {first:'Anagha',   last:'', user:'anagha',    pass:'anagha123',    role:'staff'},
+  {first:'Anurag',   last:'', user:'anurag',    pass:'anurag123',    role:'staff'},
+  {first:'Anushka',  last:'', user:'anushka',   pass:'anushka123',   role:'staff'},
+  {first:'Atharva',  last:'', user:'atharva',   pass:'atharva123',   role:'staff'},
+  {first:'Bhushan',  last:'', user:'bhushan',   pass:'bhushan123',   role:'staff'},
+  {first:'Chaitanya',last:'', user:'chaitanya', pass:'chaitanya123', role:'staff'},
+  {first:'Manohar',  last:'', user:'manohar',   pass:'manohar123',   role:'staff'},
+  {first:'Gaurav',   last:'', user:'gaurav',    pass:'gaurav123',    role:'staff'},
+  {first:'Poorvi',   last:'', user:'poorvi',    pass:'poorvi123',    role:'staff'},
+  {first:'Parth',    last:'', user:'parth',     pass:'parth123',     role:'staff'},
+  {first:'Saee',     last:'', user:'saee',      pass:'saee123',      role:'staff'},
+  {first:'Suraj',    last:'', user:'suraj',     pass:'suraj123',     role:'staff'},
+  {first:'Mukesh',   last:'', user:'mukesh',    pass:'mukesh123',    role:'staff'},
+  {first:'Mayur',    last:'', user:'mayur',     pass:'mayur123',     role:'staff'},
+  {first:'Hitesh',   last:'', user:'hitesh',    pass:'hitesh123',    role:'staff'},
+];
+const ADMIN_MEMBER = {first:'CA Parikshit', last:'', user:'admin', pass:'admin123', role:'admin'};
+
+const PROCESSES = [
+  '', 'Ledger Scrutiny', 'Purchase Vouching', 'Sales Vouching',
+  'Audit as per checklist', 'AIS Verification', 'Trail Balance Reco',
+  'Prepaid expense & Provisions', 'Audit of pending documents',
+  'Communication of observations & data requirement', 'Other (type below)'
+];
+
+// ─────────────────────────────────────
+// STORAGE
+// ─────────────────────────────────────
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function lsGet(k){try{const d=localStorage.getItem(k);return d?JSON.parse(d):null}catch(e){return null}}
+
+function getMembers(){
+  const s=lsGet('pruvn_members');
+  if(!s||!s.length){lsSet('pruvn_members',DEFAULT_MEMBERS);return JSON.parse(JSON.stringify(DEFAULT_MEMBERS))}
+  return s;
+}
+function saveMembers(m){lsSet('pruvn_members',m)}
+function fullName(m){return (m.last?m.first+' '+m.last:m.first).trim()}
+
+// ─────────────────────────────────────
+// STATE
+// ─────────────────────────────────────
+let CU = null; // current user object
+const today = new Date().toISOString().split('T')[0];
+function fmtDate(d){const p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0]}
+function skey(u,t,d){return 'adp||'+u+'||'+t+'||'+d}
+
+// ─────────────────────────────────────
+// LOGIN DROPDOWN BUILD
+// ─────────────────────────────────────
+function buildLoginDropdown(){
+  const sel=document.getElementById('loginRole');
+  sel.innerHTML='<option value="">— Select Member —</option>';
+  const ao=document.createElement('option');
+  ao.value='admin'; ao.textContent='CA Parikshit (Admin)';
+  sel.appendChild(ao);
+  const grp=document.createElement('optgroup');
+  grp.label='Audit Articles';
+  getMembers().forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m.user; o.textContent=fullName(m);
+    grp.appendChild(o);
+  });
+  sel.appendChild(grp);
+}
+
+// ─────────────────────────────────────
+// LOGIN
+// ─────────────────────────────────────
+function doLogin(){
+  const uname=document.getElementById('loginRole').value;
+  const pass=document.getElementById('loginPass').value.trim();
+  if(!uname){showLoginErr('Please select your name.');return}
+  if(!pass){showLoginErr('Please enter your password.');return}
+  let member=null;
+  if(uname==='admin'){
+    if(pass!==ADMIN_MEMBER.pass){showLoginErr('Incorrect password. Please try again.');return}
+    member={...ADMIN_MEMBER};
+  } else {
+    const m=getMembers().find(x=>x.user===uname);
+    if(!m){showLoginErr('Member not found.');return}
+    if(m.pass!==pass){showLoginErr('Incorrect password. Please try again.');return}
+    member={...m};
+  }
+  document.getElementById('loginErr').style.display='none';
+  CU=member;
+  const isAdmin=CU.role==='admin';
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('appPage').classList.add('visible');
+  document.getElementById('topUser').textContent=fullName(CU);
+  document.getElementById('topPill').textContent=isAdmin?'ADMIN':'STAFF';
+  if(isAdmin)document.getElementById('topPill').classList.add('admin');
+  document.getElementById('bannerDate').textContent=fmtDate(today);
+  document.getElementById('opDate').textContent=fmtDate(today);
+  document.getElementById('clDate').textContent=fmtDate(today);
+  // FIX 3: Prepared by = person who is logged in (their full name)
+  document.getElementById('opPrepBy').textContent=fullName(CU);
+  document.getElementById('clPrepBy').textContent=fullName(CU);
+  document.getElementById('rptDate').value=today;
+  // Reports tab visible to ALL users
+  document.getElementById('ntab-reports').style.display='flex';
+  // Members management only for admin
+  if(isAdmin){
+    document.getElementById('ntab-members').style.display='flex';
+  }
+  buildReportMemberDropdown();
+  loadEntries('opening');
+  loadEntries('closing');
+}
+function showLoginErr(msg){const e=document.getElementById('loginErr');e.textContent=msg;e.style.display='block'}
+
+function doLogout(){
+  CU=null;
+  document.getElementById('appPage').classList.remove('visible');
+  document.getElementById('loginPage').style.display='flex';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginRole').value='';
+  document.getElementById('loginErr').style.display='none';
+  
+  document.getElementById('ntab-members').style.display='none';
+  showTab('opening');
+  buildLoginDropdown();
+}
+
+// ─────────────────────────────────────
+// TABS
+// ─────────────────────────────────────
+const TABS=['opening','closing','team','reports','members'];
+function showTab(name){
+  TABS.forEach(t=>{
+    const p=document.getElementById('tab-'+t);
+    const n=document.getElementById('ntab-'+t);
+    if(p)p.style.display=t===name?'block':'none';
+    if(n){n.classList.remove('active');if(t===name)n.classList.add('active')}
+  });
+  if(name==='team')renderTeam();
+  if(name==='members')renderMemberGrid();
+}
+
+// ─────────────────────────────────────
+// TASK ROWS
+// ─────────────────────────────────────
+let tc={opening:0,closing:0};
+
+function procOpts(sel){
+  return PROCESSES.map(p=>'<option value="'+p+'"'+(sel===p?' selected':'')+'>'+( p||'-- Select Process --')+'</option>').join('');
+}
+
+function makeRow(type,idx,data){
+  data=data||{};
+  const id='trow_'+type+'_'+idx;
+  const isC=type==='closing';
+  const sp=data.processSel||'', fp=data.processFree||'';
+  const showFree=(sp==='Other (type below)')||(!sp&&fp);
+  return '<div class="task-card" id="'+id+'">'
+    +'<div class="task-card-header">'
+    +'<span class="task-row-label">Row '+(idx+1)+'</span>'
+    +'<button class="btn-remove" onclick="document.getElementById(\''+id+'\').remove()">✕ Remove</button>'
+    +'</div>'
+    +'<div class="form-grid g3">'
+    +'<div class="field-wrap"><label>Client Name</label><input data-f="client" placeholder="Client name" value="'+(data.client||'')+'"/></div>'
+    +'<div class="field-wrap"><label>Field / Desk</label><select data-f="ftype">'
+    +'<option'+((data.ftype||'Desk')==='Desk'?' selected':'')+'>Desk</option>'
+    +'<option'+(data.ftype==='Field'?' selected':'')+'>Field</option>'
+    +'</select></div>'
+    +'<div class="field-wrap"><label>Audit Process</label>'
+    +'<div class="process-wrap">'
+    +'<select data-f="processSel" onchange="toggleFree(this,\''+id+'\')">'
+    +procOpts(sp)
+    +'</select>'
+    +'<input data-f="processFree" placeholder="Describe process…" value="'+fp+'" style="display:'+(showFree?'block':'none')+'"/>'
+    +'</div></div>'
+    +'</div>'
+    +'<div class="form-grid '+(isC?'g4':'g2')+'">'
+    +'<div class="field-wrap"><label>Est. Time (min)</label><input data-f="estTime" type="number" min="0" placeholder="e.g. 180" value="'+(data.estTime||'')+'"/></div>'
+    +'<div class="field-wrap"><label>Est. No. of TXN</label><input data-f="estTxn" type="number" min="0" placeholder="e.g. 50" value="'+(data.estTxn||'')+'"/></div>'
+    +(isC
+      ?'<div class="field-wrap"><label>Actual Time (min)</label><input data-f="actTime" type="number" min="0" placeholder="e.g. 200" value="'+(data.actTime||'')+'"/></div>'
+      +'<div class="field-wrap"><label>Actual No. of TXN</label><input data-f="actTxn" type="number" min="0" placeholder="e.g. 55" value="'+(data.actTxn||'')+'"/></div>'
+      :'')
+    +'</div>'
+    +'</div>';
+}
+
+function toggleFree(sel,rowId){
+  const fi=document.getElementById(rowId).querySelector('[data-f="processFree"]');
+  fi.style.display=sel.value==='Other (type below)'?'block':'none';
+  if(sel.value!=='Other (type below)')fi.value='';
+}
+
+function addTask(type){
+  document.getElementById(type+'Tasks').insertAdjacentHTML('beforeend',makeRow(type,tc[type]++));
+}
+
+function collectTasks(type){
+  const rows=[];
+  document.querySelectorAll('[id^="trow_'+type+'_"]').forEach(function(card){
+    function g(f){var e=card.querySelector('[data-f="'+f+'"]');return e?e.value.trim():''}
+    var ps=g('processSel'),pf=g('processFree');
+    rows.push({
+      client:g('client'),ftype:g('ftype'),
+      processSel:ps,processFree:pf,
+      process:ps==='Other (type below)'?pf:(ps||pf),
+      estTime:g('estTime'),estTxn:g('estTxn'),
+      actTime:g('actTime'),actTxn:g('actTxn')
+    });
+  });
+  return rows;
+}
+
+function renderTasks(type,tasks){
+  var c=document.getElementById(type+'Tasks');
+  c.innerHTML=''; tc[type]=0;
+  (tasks||[]).forEach(function(t,i){c.insertAdjacentHTML('beforeend',makeRow(type,tc[type]++,t))});
+}
+
+// ─────────────────────────────────────
+// LOAD / SAVE
+// ─────────────────────────────────────
+function loadEntries(type){
+  if(CU.role==='admin'){
+    var all=[];
+    getMembers().forEach(function(m){
+      var d=lsGet(skey(m.user,type,today));
+      if(d&&d.tasks)d.tasks.forEach(function(t){if(t.client)all.push(Object.assign({},t,{_who:fullName(m)}))});
+    });
+    renderTasks(type,all.length?all:[{},{},{}]);
+  } else {
+    var d=lsGet(skey(CU.user,type,today));
+    renderTasks(type,(d&&d.tasks&&d.tasks.length)?d.tasks:[{},{},{}]);
+  }
+}
+
+function saveTasks(type){
+  var tasks=collectTasks(type);
+  lsSet(skey(CU.user,type,today),{tasks:tasks,savedAt:new Date().toISOString(),preparedBy:fullName(CU)});
+  var ts=document.getElementById(type==='opening'?'opSaveTs':'clSaveTs');
+  ts.textContent='✓ Saved at '+new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  showToast('Entry saved successfully!');
+}
+
+// ─────────────────────────────────────
+// TEAM OVERVIEW
+// ─────────────────────────────────────
+function renderTeam(){
+  document.getElementById('teamDateLabel').textContent=fmtDate(today);
+  var members=getMembers();
+  var html='<table><thead><tr><th>#</th><th>Full Name</th><th>Username</th><th>Morning</th><th>Evening</th><th>Last Saved</th><th>Tasks</th></tr></thead><tbody>';
+  members.forEach(function(m,i){
+    var op=lsGet(skey(m.user,'opening',today));
+    var cl=lsGet(skey(m.user,'closing',today));
+    var opOk=op&&op.tasks&&op.tasks.some(function(t){return t.client});
+    var clOk=cl&&cl.tasks&&cl.tasks.some(function(t){return t.client});
+    var last=cl&&cl.savedAt?cl.savedAt:(op&&op.savedAt?op.savedAt:null);
+    var cnt=(op&&op.tasks?op.tasks.filter(function(t){return t.client}).length:0)
+           +(cl&&cl.tasks?cl.tasks.filter(function(t){return t.client}).length:0);
+    var lastFmt=last?new Date(last).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}):'—';
+    html+='<tr>'
+      +'<td style="color:var(--muted2)">'+(i+1)+'</td>'
+      +'<td><b>'+fullName(m)+'</b></td>'
+      +'<td style="font-size:12px;color:var(--muted)">'+m.user+'</td>'
+      +'<td><span class="status-badge '+(opOk?'badge-done':'badge-empty')+'"><span class="dot '+(opOk?'dot-g':'dot-e')+'"></span>'+(opOk?'Submitted':'Pending')+'</span></td>'
+      +'<td><span class="status-badge '+(clOk?'badge-done':'badge-pend')+'"><span class="dot '+(clOk?'dot-g':'dot-a')+'"></span>'+(clOk?'Submitted':'Pending')+'</span></td>'
+      +'<td style="color:var(--muted);font-size:12px">'+lastFmt+'</td>'
+      +'<td style="font-weight:700;color:var(--navy)">'+(cnt||'—')+'</td>'
+      +'</tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('teamTable').innerHTML=html;
+}
+
+// ─────────────────────────────────────
+// MANAGE MEMBERS (FIX 4 & 5)
+// ─────────────────────────────────────
+var pendingDeleteUser='';
+
+function renderMemberGrid(){
+  var members=getMembers();
+  var grid=document.getElementById('memberGrid');
+  grid.innerHTML='';
+  if(!members.length){
+    grid.innerHTML='<p style="color:var(--muted);font-size:13px">No members yet. Add one above.</p>';
+    return;
+  }
+  members.forEach(function(m){
+    var chip=document.createElement('div');
+    chip.className='member-chip';
+    chip.innerHTML='<div><div class="mname">'+fullName(m)+'</div><div class="muname">@'+m.user+'</div></div>'
+      +'<button class="chip-del" onclick="openDelModal(\''+m.user+'\',\''+fullName(m).replace(/'/g,"\\'")+'\')" >Remove</button>';
+    grid.appendChild(chip);
+  });
+}
+
+function addMember(){
+  var first=document.getElementById('mFirst').value.trim();
+  var last=document.getElementById('mLast').value.trim();
+  var user=document.getElementById('mUser').value.trim().toLowerCase().replace(/\s+/g,'.');
+  var pass=document.getElementById('mPass').value.trim();
+  var err=document.getElementById('memberErr');
+  if(!first){err.textContent='First name is required.';err.style.display='block';return}
+  if(!user){err.textContent='Username is required.';err.style.display='block';return}
+  if(!pass){err.textContent='Password is required.';err.style.display='block';return}
+  if(user==='admin'){err.textContent='"admin" is reserved. Choose another username.';err.style.display='block';return}
+  var members=getMembers();
+  if(members.find(function(m){return m.user===user})){
+    err.textContent='Username already exists. Please choose a different one.';
+    err.style.display='block';return;
+  }
+  err.style.display='none';
+  members.push({first:first,last:last,user:user,pass:pass,role:'staff'});
+  saveMembers(members);
+  ['mFirst','mLast','mUser','mPass'].forEach(function(id){document.getElementById(id).value=''});
+  renderMemberGrid();
+  buildLoginDropdown();
+  buildReportMemberDropdown();
+  showToast(fullName({first:first,last:last})+' added successfully!');
+}
+
+function openDelModal(uname,name){
+  pendingDeleteUser=uname;
+  document.getElementById('delName').textContent=name;
+  document.getElementById('delModal').classList.add('open');
+}
+function closeDelModal(){document.getElementById('delModal').classList.remove('open');pendingDeleteUser=''}
+function confirmDelete(){
+  if(!pendingDeleteUser)return;
+  saveMembers(getMembers().filter(function(m){return m.user!==pendingDeleteUser}));
+  closeDelModal();
+  renderMemberGrid();
+  buildLoginDropdown();
+  buildReportMemberDropdown();
+  showToast('Member removed successfully.');
+}
+
+// ─────────────────────────────────────
+// REPORT HELPERS
+// ─────────────────────────────────────
+function buildReportMemberDropdown(){
+  var sel=document.getElementById('rptMember');
+  sel.innerHTML='<option value="ALL">All Members</option>';
+  getMembers().forEach(function(m){
+    var o=document.createElement('option');
+    o.value=m.user; o.textContent=fullName(m);
+    sel.appendChild(o);
+  });
+}
+
+function getRows(type,date,memberUser){
+  var members=memberUser==='ALL'?getMembers():getMembers().filter(function(m){return m.user===memberUser});
+  var rows=[]; var sr=1;
+  members.forEach(function(m){
+    var d=lsGet(skey(m.user,type,date));
+    var tasks=(d&&d.tasks)||[];
+    var valid=tasks.filter(function(t){return t.client});
+    if(valid.length){
+      valid.forEach(function(t){
+        rows.push({sr:sr++,article:fullName(m),client:t.client,ftype:t.ftype||'Desk',
+          process:t.process||'',estTime:t.estTime||'',estTxn:t.estTxn||'',
+          actTime:t.actTime||'',actTxn:t.actTxn||''});
+      });
+    } else {
+      rows.push({sr:sr++,article:fullName(m),client:'',ftype:'',process:'',
+        estTime:'',estTxn:'',actTime:'',actTxn:''});
+    }
+  });
+  return rows;
+}
+
+function loadReportPreview(){
+  var date=document.getElementById('rptDate').value||today;
+  var mu=document.getElementById('rptMember').value;
+  var rows=getRows('closing',date,mu);
+  var html='<div class="preview-wrap"><table><thead>'
+    +'<tr><td colspan="9" style="background:var(--navy2);color:#fff;font-weight:700;text-align:center;padding:8px;font-size:13px">PRUVN And Associates — ADP ('+fmtDate(date)+')</td></tr>'
+    +'<tr><th>Sr.No</th><th>Audit Article</th><th>Client Name</th><th>Field/Desk</th><th>Audit Process</th><th>Est. Time</th><th>Est. TXN</th><th>Actual Time</th><th>Actual TXN</th></tr>'
+    +'</thead><tbody>';
+  rows.forEach(function(r){
+    html+='<tr><td>'+r.sr+'</td><td>'+r.article+'</td><td>'+r.client+'</td><td>'+r.ftype+'</td><td>'+r.process+'</td>'
+      +'<td>'+(r.estTime?r.estTime+' Min':'')+'</td><td>'+(r.estTxn||'')+'</td>'
+      +'<td>'+(r.actTime?r.actTime+' Min':'')+'</td><td>'+(r.actTxn||'')+'</td></tr>';
+  });
+  html+='</tbody></table></div>';
+  document.getElementById('rptPreview').innerHTML=html;
+}
+
+// ─────────────────────────────────────
+// CSV DOWNLOAD — FIX 3: preparedBy = logged-in user
+// ─────────────────────────────────────
+function downloadCSV(type){
+  var date=document.getElementById('rptDate').value||today;
+  var mu=document.getElementById('rptMember').value;
+  var rows=getRows(type,date,mu);
+  var isC=type==='closing';
+  var prepBy=fullName(CU); // always the person downloading
+  function esc(v){return '"'+String(v||'').replace(/"/g,'""')+'"'}
+  var csv='PRUVN And Associates\n'
+    +'Audit Day Plan,ADP,,,,Date,'+fmtDate(date)+'\n'
+    +'To be shared on Whatsapp daily at '+(isC?'6 Pm':'10 am')+'\n'
+    +'Prepared by,'+prepBy+'\n'
+    +'Reviewed by,CA Parikshit\n\n';
+  if(isC){
+    csv+='Sr.No,Audit Article,Client Name,Field/Desk Audit,Audit Process,Est Time (Min),Est No of TXN,Actual Time (Min),Actual No of TXN\n';
+    rows.forEach(function(r){csv+=r.sr+','+esc(r.article)+','+esc(r.client)+','+esc(r.ftype)+','+esc(r.process)+','+r.estTime+','+r.estTxn+','+r.actTime+','+r.actTxn+'\n'});
+  } else {
+    csv+='Sr.No,Audit Article,Client Name,Field/Desk Audit,Audit Process,Est Time (Min),Est No of TXN\n';
+    rows.forEach(function(r){csv+=r.sr+','+esc(r.article)+','+esc(r.client)+','+esc(r.ftype)+','+esc(r.process)+','+r.estTime+','+r.estTxn+'\n'});
+  }
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download='PRUVN_ADP_'+type+'_'+date+'.csv';
+  a.click();
+  showToast('CSV downloaded! Open in Excel or Google Sheets.');
+}
+
+// ─────────────────────────────────────
+// PNG DOWNLOAD — FIX 2: 3x high-res, crisp canvas
+// ─────────────────────────────────────
+function downloadPNG(type){
+  var date=document.getElementById('rptDate').value||today;
+  var mu=document.getElementById('rptMember').value;
+  var rows=getRows(type,date,mu);
+  var isC=type==='closing';
+  var prepBy=fullName(CU); // FIX 3
+
+  var SCALE=3; // 3x pixel density = sharp image
+  var canvas=document.getElementById('imgCanvas');
+  var ctx=canvas.getContext('2d');
+
+  var cols=isC
+    ?[{l:'Sr.No',w:44},{l:'Audit Article',w:118},{l:'Client Name',w:155},{l:'Field/Desk',w:78},{l:'Audit Process',w:205},{l:'Est. Time',w:76},{l:'Est. TXN',w:66},{l:'Actual Time',w:84},{l:'Actual TXN',w:74}]
+    :[{l:'Sr.No',w:48},{l:'Audit Article',w:130},{l:'Client Name',w:185},{l:'Field/Desk',w:90},{l:'Audit Process',w:252},{l:'Est. Time',w:88},{l:'Est. TXN',w:78}];
+
+  var PAD=18, RH=30, HH=32;
+  var totalW=cols.reduce(function(a,c){return a+c.w},0)+PAD*2;
+  var META_H=RH*6+6;
+  var totalH=META_H+HH+rows.length*RH+PAD+10;
+
+  // Set canvas physical pixels = logical * SCALE
+  canvas.width=totalW*SCALE;
+  canvas.height=totalH*SCALE;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(SCALE,SCALE);
+
+  // White background
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,totalW,totalH);
+
+  function txt(text,x,y,font,color,align){
+    ctx.save();
+    ctx.font=font;
+    ctx.fillStyle=color;
+    ctx.textAlign=align||'left';
+    ctx.textBaseline='middle';
+    ctx.fillText(text,x,y);
+    ctx.restore();
+  }
+
+  function trunc(str,maxPx){
+    var s=String(str||'');
+    ctx.font='11px Segoe UI,Arial';
+    if(ctx.measureText(s).width<=maxPx)return s;
+    while(s.length>1&&ctx.measureText(s+'…').width>maxPx)s=s.slice(0,-1);
+    return s+'…';
+  }
+
+  var y=PAD;
+
+  // Firm title row
+  ctx.fillStyle='#f0f4ff';
+  ctx.fillRect(0,y-6,totalW,RH+4);
+  txt('PRUVN And Associates',totalW/2,y+RH/2,'bold 15px Segoe UI,Arial','#1a2744','center');
+  y+=RH;
+
+  // ADP header row
+  ctx.fillStyle='#e8ecf8';
+  ctx.fillRect(0,y,totalW,RH-2);
+  txt('Audit Day Plan',PAD,y+RH/2-1,'bold 12px Segoe UI,Arial','#1a2744');
+  txt('ADP',PAD+136,y+RH/2-1,'bold 12px Segoe UI,Arial','#e8970a');
+  txt('Date: '+fmtDate(date),totalW-PAD,y+RH/2-1,'bold 11px Segoe UI,Arial','#1a2744','right');
+  y+=RH;
+
+  // Meta lines
+  txt('To be shared on WhatsApp daily at '+(isC?'6 Pm':'10 am'),PAD,y+10,'11px Segoe UI,Arial','#6b7a99');
+  y+=22;
+  txt('Prepared by: '+prepBy,PAD,y+10,'bold 11px Segoe UI,Arial','#1e2532');
+  y+=20;
+  txt('Reviewed by: CA Parikshit',PAD,y+10,'11px Segoe UI,Arial','#1e2532');
+  y+=24;
+
+  // Column header
+  var x=PAD;
+  ctx.fillStyle='#1a2744';
+  ctx.fillRect(0,y,totalW,HH);
+  cols.forEach(function(c){
+    txt(c.l,x+6,y+HH/2,'bold 10.5px Segoe UI,Arial','#ffffff');
+    // vertical divider
+    if(x>PAD){ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+HH);ctx.stroke()}
+    x+=c.w;
+  });
+  y+=HH;
+
+  // Data rows
+  rows.forEach(function(r,ri){
+    ctx.fillStyle=ri%2===0?'#f5f8ff':'#ffffff';
+    ctx.fillRect(0,y,totalW,RH);
+
+    var vals=[String(r.sr),r.article,r.client,r.ftype,r.process,
+      r.estTime?r.estTime+' Min':'',r.estTxn||''];
+    if(isC){vals.push(r.actTime?r.actTime+' Min':'',r.actTxn||'')}
+
+    var xi=PAD;
+    vals.forEach(function(v,i){
+      var t=trunc(v,cols[i].w-10);
+      txt(t,xi+5,y+RH/2,'11px Segoe UI,Arial','#1e2532');
+      xi+=cols[i].w;
+    });
+
+    // row bottom border
+    ctx.strokeStyle='#dde2ec';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(0,y+RH);ctx.lineTo(totalW,y+RH);ctx.stroke();
+
+    // vertical col dividers
+    xi=PAD;
+    cols.forEach(function(c,ci){
+      if(ci>0){
+        ctx.strokeStyle='#dde2ec';ctx.lineWidth=0.5;
+        ctx.beginPath();ctx.moveTo(xi,y);ctx.lineTo(xi,y+RH);ctx.stroke();
+      }
+      xi+=c.w;
+    });
+    y+=RH;
+  });
+
+  // outer border
+  ctx.strokeStyle='#c8d0e4';ctx.lineWidth=1;
+  ctx.strokeRect(0,PAD-6,totalW,y-PAD+6);
+
+  canvas.toBlob(function(blob){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='PRUVN_ADP_'+type+'_'+date+'.png';
+    a.click();
+    showToast('High-res PNG downloaded! Ready to share on WhatsApp.');
+  },'image/png',1.0);
+}
+
+// ─────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(function(){t.style.display='none'},2800);
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+buildLoginDropdown();
+</script>
+</body>
+</html>
